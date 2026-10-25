@@ -289,7 +289,7 @@ const metalKey = Q.get('metal') || CFG.metal || 'pt';
 const metalMat = new THREE.MeshStandardMaterial({ color: METALS[metalKey] || METALS.pt, metalness: 1, roughness: 0.1, envMapIntensity: 1.2 });
 document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === metalKey));
 const diamondMats = [];
-let radius = 1, elev = 0.55;
+let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : 0.55;   // ?elev= camera height (capture stills)
 
 const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
 const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(CFG.model || 'model.glb');
