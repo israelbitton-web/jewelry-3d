@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>תכשיט בתלת-ממד</title>
+<style>
+  :root { --bg: #efeeeb; --ink: #1d1d1f; --muted: #6b6b70; --line: #d6d4cf; --accent: #8a6d3b; --panel: rgba(255,255,255,.78); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); } }
+  :root[data-theme="dark"] { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Arial, sans-serif; overflow: hidden; overscroll-behavior: none; }
+  body { display: flex; flex-direction: column; height: 100dvh; }
+  /* the jewel gets all the space above the controls, so the panel never covers it */
+  #view { position: relative; flex: 1; min-height: 0; }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .bar { margin: 0 12px max(12px, env(safe-area-inset-bottom)); background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+         padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+  h1 { font-size: 16px; margin: 0; font-weight: 600; text-align: center; }
+  .sub { font-size: 12px; color: var(--muted); text-align: center; margin-top: 2px; }
+  .ctl { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  button { font: inherit; font-size: 14px; padding: 8px 14px; min-height: 40px; border: 1px solid var(--line); background: transparent; color: var(--ink);
+           border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  button.on { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-inline-end: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
+  .hint { position: absolute; top: max(12px, env(safe-area-inset-top)); inset-inline: 0; text-align: center; font-size: 13px; color: var(--muted); pointer-events: none; transition: opacity .6s; }
+  #loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+  /* touch screens: big, thumb-friendly controls in two even rows */
+  @media (pointer: coarse) {
+    h1 { font-size: 18px; } .sub { font-size: 13px; }
+    .ctl { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .ctl button { font-size: 16px; min-height: 48px; padding: 8px 6px; grid-column: span 2; }
+    .ctl button.half { grid-column: span 3; }
+  }
+  body.capture .bar, body.capture .hint, body.capture #loading { display: none; }
+</style>
+</head>
+<body>
+<div id="view">
+  <div id="loading">טוען…</div>
+  <div class="hint" id="hint">גררו באצבע כדי לסובב · צביטה לזום</div>
+</div>
+<div class="bar">
+  <div><h1 id="title"></h1><div class="sub" id="sub"></div></div>
+  <div class="ctl">
+    <button data-metal="pt"><span class="sw" style="background:#dcdde0"></span>פלטינה</button>
+    <button data-metal="yg"><span class="sw" style="background:#f1c97a"></span>זהב צהוב</button>
+    <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span>זהב אדום</button>
+    <button id="bloom" class="half">ניצוץ</button>
+    <button id="rot" class="on half">סיבוב</button>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+               "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.3/build/index.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { MeshBVH, MeshBVHUniformStruct, shaderStructs, shaderIntersectFunction } from 'three-mesh-bvh';
+
+// ?capture=1&size=1080 : no UI, fixed square canvas, frames rendered on demand by window.__frame(i, n)
+const Q = new URLSearchParams(location.search);
+const CAPTURE = Q.has('capture');
+const CSIZE = +(Q.get('size') || 1080);
+if (CAPTURE) document.body.classList.add('capture');
+const CFG = await fetch('config.json').then((r) => r.ok ? r.json() : {}).catch(() => ({}));
+document.getElementById('title').textContent = CFG.title || '';
+document.getElementById('sub').textContent = CFG.subtitle || '';
+if (CFG.title) document.title = CFG.title;
+// ?mobile=1 / ?mobile=0 forces the phone / desktop render path (to compare both on one machine)
+const MOBILE = Q.has('mobile') ? Q.get('mobile') === '1' : matchMedia('(pointer: coarse)').matches;
+const view = document.getElementById('view');
+
+const renderer = new THREE.WebGLRenderer({ antialias: !MOBILE, preserveDrawingBuffer: CAPTURE, powerPreference: 'high-performance' });
+// phones: start at a modest resolution; the frame-time watcher below lowers it further if the GPU struggles
+let pixelRatio = CAPTURE ? 1 : Math.min(devicePixelRatio, MOBILE ? 1.5 : 2);
+renderer.setPixelRatio(pixelRatio);
+const W = () => CAPTURE ? CSIZE : view.clientWidth, H = () => CAPTURE ? CSIZE : view.clientHeight;
+renderer.setSize(W(), H());
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+view.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, W() / H(), 0.1, 1000);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.autoRotate = !CAPTURE; controls.autoRotateSpeed = 1.2; controls.enablePan = false;
+controls.addEventListener('start', () => { document.getElementById('hint').style.opacity = 0; });
+
+function setBackground() {
+  if (CAPTURE || CFG.background) { scene.background = new THREE.Color(CFG.background || 0xefeeeb); return; }
+  const dark = document.documentElement.dataset.theme === 'dark' ||
+    (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+  scene.background = new THREE.Color(dark ? 0x151518 : 0xefeeeb);
+}
+setBackground();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setBackground);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+const room = new RoomEnvironment(renderer);
+scene.environment = pmrem.fromScene(room, 0.03).texture;
+const cubeRT = new THREE.WebGLCubeRenderTarget(512, { type: THREE.HalfFloatType, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter });
+new THREE.CubeCamera(0.1, 100, cubeRT).update(renderer, room);
+
+// Diamond: refraction into the stone, internal bounces, exit into the studio light, per-channel dispersion.
+// Two tracers:
+//  - analytic (default for round stones): the stone is an ideal round brilliant made of planes (16 pavilion facets at
+//    40.75 deg, 16 crown facets at 34.5 deg, 16 girdle facets, table). No textures, a few dot products per bounce:
+//    identical on every GPU (the BVH tracer fails on many Android GPUs: flat white stones) and fast on phones.
+//  - BVH (?gem=bvh, and any non-round stone): traces the stone's own mesh through three-mesh-bvh.
+const GEM = Q.get('gem') || 'analytic';
+const GEM_SHADER_HEAD = /* glsl */`
+  varying vec3 vWorldPosition; varying vec3 vNormal;
+  uniform samplerCube envMap; uniform float bounces; uniform float ior; uniform float aberrationStrength;
+  uniform float fresnel; uniform vec3 color; uniform vec2 resolution;
+  uniform mat4 viewMatrixInverse; uniform mat4 projectionMatrixInverse;`;
+const GEM_SHADER_MAIN = /* glsl */`
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution;
+    vec3 camDir = normalize((viewMatrixInverse * vec4((projectionMatrixInverse * vec4(uv * 2.0 - 1.0, 0.0, 1.0)).xyz, 0.0)).xyz);
+    vec3 n = normalize(vNormal);
+    if (dot(n, cameraPosition - vWorldPosition) < 0.0) n = -n;
+    vec3 rd = normalize(vWorldPosition - cameraPosition);
+    vec3 dG = traceOut(rd, n, ior);
+    vec3 dR = traceOut(rd, n, ior * (1.0 - aberrationStrength));
+    vec3 dB = traceOut(rd, n, ior * (1.0 + aberrationStrength));
+    vec3 c = vec3(textureGrad(envMap, dR, dFdx(camDir), dFdy(camDir)).r,
+                  textureGrad(envMap, dG, dFdx(camDir), dFdy(camDir)).g,
+                  textureGrad(envMap, dB, dFdx(camDir), dFdy(camDir)).b) * color;
+    float f = pow(1.0 + dot(rd, n), 5.0) * fresnel;
+    vec3 refl = textureCube(envMap, reflect(rd, n)).rgb;
+    gl_FragColor = vec4(mix(c, refl, clamp(f, 0.0, 1.0)), 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
+const GEM_VERTEX = /* glsl */`
+  varying vec3 vWorldPosition; varying vec3 vNormal;
+  void main() {
+    vec4 wp = modelMatrix * vec4(position, 1.0);
+    vWorldPosition = wp.xyz;
+    vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+    gl_Position = projectionMatrix * viewMatrix * wp;
+  }`;
+
+function gemUniforms() {
+  return {
+    envMap: { value: cubeRT.texture }, bounces: { value: MOBILE ? 4 : 5 }, ior: { value: 2.42 },
+    aberrationStrength: { value: 0.012 }, fresnel: { value: 0.9 }, color: { value: new THREE.Color(1, 1, 1) },
+    resolution: { value: new THREE.Vector2() }, viewMatrixInverse: { value: camera.matrixWorld },
+    projectionMatrixInverse: { value: camera.projectionMatrixInverse },
+  };
+}
+
+// frame of a round stone from its world-space vertices: axis (culet -> table), girdle centre, girdle radius.
+// Returns null when the stone is not round (the two largest spreads differ), so it keeps the mesh tracer.
+function roundFrame(mesh) {
+  const pos = mesh.geometry.attributes.position, v = new THREE.Vector3(), P = [];
+  for (let i = 0; i < pos.count; i++) P.push(v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld).clone());
+  const c = P.reduce((a, b) => a.add(b), new THREE.Vector3()).divideScalar(P.length);
+  const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (const p of P) { const d = [p.x - c.x, p.y - c.y, p.z - c.z]; for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += d[a] * d[b]; }
+  // power iteration with deflation -> eigenvectors sorted by spread
+  const eig = [], M = C.map((r) => r.slice());
+  for (let k = 0; k < 3; k++) {
+    let x = [Math.random() + 0.1, Math.random() + 0.2, Math.random() + 0.3], l = 0;
+    for (let it = 0; it < 80; it++) {
+      const y = [0, 1, 2].map((a) => M[a][0] * x[0] + M[a][1] * x[1] + M[a][2] * x[2]);
+      l = Math.hypot(...y); if (l < 1e-12) break; x = y.map((t) => t / l);
+    }
+    eig.push({ l, x: new THREE.Vector3(...x) });
+    for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) M[a][b] -= l * x[a] * x[b];
+  }
+  if (Math.abs(eig[0].l - eig[1].l) > 0.08 * eig[0].l) return null;
+  const axis = eig[2].x.normalize();
+  let lo = Infinity, hi = -Infinity, R = 0;
+  for (const p of P) { const t = p.clone().sub(c).dot(axis); lo = Math.min(lo, t); hi = Math.max(hi, t); R = Math.max(R, p.clone().sub(c).addScaledVector(axis, -t).length()); }
+  if (Math.abs(lo) < Math.abs(hi)) { axis.negate(); [lo, hi] = [-hi, -lo]; }          // the culet is the far end
+  // girdle level = where the stone is widest
+  let gs = 0, gn = 0;
+  for (const p of P) { const t = p.clone().sub(c).dot(axis); if (p.clone().sub(c).addScaledVector(axis, -t).length() > 0.97 * R) { gs += t; gn++; } }
+  const centre = c.clone().addScaledVector(axis, gn ? gs / gn : 0);
+  const u = new THREE.Vector3(1, 0, 0); if (Math.abs(u.dot(axis)) > 0.9) u.set(0, 1, 0);
+  u.addScaledVector(axis, -u.dot(axis)).normalize();
+  const w = new THREE.Vector3().crossVectors(axis, u);
+  return { centre, axis, u, w, R, table: hi - (gn ? gs / gn : 0) };
+}
+
+function analyticGem(F) {
+  const un = gemUniforms();
+  Object.assign(un, { gC: { value: F.centre }, gU: { value: F.u }, gW: { value: F.w }, gA: { value: F.axis },
+    gR: { value: F.R }, gT: { value: Math.min(F.table, 0.36 * F.R) } });
+  return new THREE.ShaderMaterial({
+    uniforms: un, vertexShader: GEM_VERTEX,
+    fragmentShader: GEM_SHADER_HEAD + /* glsl */`
+      uniform vec3 gC; uniform vec3 gU; uniform vec3 gW; uniform vec3 gA; uniform float gR; uniform float gT;
+      const float PI2 = 6.2831853;
+      vec3 toL(vec3 d) { return vec3(dot(d, gU), dot(d, gW), dot(d, gA)); }
+      vec3 toW(vec3 d) { return gU * d.x + gW * d.y + gA * d.z; }
+      // nearest facet plane the ray leaves through (convex stone: smallest positive t among outward planes)
+      void hitFacet(vec3 ro, vec3 rd, out float tmin, out vec3 nh) {
+        tmin = 1e9; nh = vec3(0.0, 0.0, 1.0);
+        if (rd.z > 0.0) { float t = (gT - ro.z) / rd.z; if (t > 1e-5 && t < tmin) { tmin = t; nh = vec3(0.0, 0.0, 1.0); } }
+        const float sa = 0.6528, ca = 0.7576;   // pavilion 40.75 deg
+        const float sb = 0.5664, cb = 0.8241;   // crown 34.5 deg
+        vec3 apex = vec3(0.0, 0.0, -gR * 0.8613);
+        for (int k = 0; k < 16; k++) {
+          float ph = (float(k) + 0.5) * PI2 / 16.0; vec2 cs = vec2(cos(ph), sin(ph));
+          vec3 np = vec3(cs * sa, -ca); float d = dot(rd, np);
+          if (d > 0.0) { float t = dot(apex - ro, np) / d; if (t > 1e-5 && t < tmin) { tmin = t; nh = np; } }
+          vec3 nc = vec3(cs * sb, cb); d = dot(rd, nc);
+          if (d > 0.0) { float t = dot(vec3(cs * gR, 0.0) - ro, nc) / d; if (t > 1e-5 && t < tmin) { tmin = t; nh = nc; } }
+          vec3 ng = vec3(cs, 0.0); d = dot(rd, ng);
+          if (d > 0.0) { float t = dot(vec3(cs * gR, 0.0) - ro, ng) / d; if (t > 1e-5 && t < tmin) { tmin = t; nh = ng; } }
+        }
+      }
+      vec3 traceOut(vec3 rd, vec3 n, float eta) {
+        vec3 dir = toL(refract(rd, n, 1.0 / eta));
+        vec3 ro = toL(vWorldPosition - gC) + dir * gR * 0.002;
+        for (float i = 0.0; i < 8.0; i++) {
+          if (i >= bounces) break;
+          float t; vec3 nh; hitFacet(ro, dir, t, nh);
+          ro += dir * t;
+          vec3 tr = refract(dir, -nh, eta);
+          if (dot(tr, tr) > 0.0) return normalize(toW(tr));
+          dir = reflect(dir, nh);
+          ro += dir * gR * 0.002;
+        }
+        return normalize(toW(dir));
+      }` + GEM_SHADER_MAIN,
+  });
+}
+
+function bvhGem(geometry) {
+  const bvh = new MeshBVH(geometry, { maxLeafTris: 1 });
+  const bvhStruct = new MeshBVHUniformStruct(); bvhStruct.updateFrom(bvh);
+  const un = gemUniforms(); un.bvh = { value: bvhStruct };
+  return new THREE.ShaderMaterial({
+    uniforms: un, vertexShader: GEM_VERTEX,
+    fragmentShader: /* glsl */`precision highp isampler2D; precision highp usampler2D;` + GEM_SHADER_HEAD + `
+      uniform mat4 modelMatrix;
+      ${shaderStructs}
+      ${shaderIntersectFunction}
+      uniform BVH bvh;
+      vec3 traceOut(vec3 rd, vec3 n, float eta) {
+        mat4 inv = inverse(modelMatrix);
+        vec3 dir = refract(rd, n, 1.0 / eta);
+        vec3 ro = (inv * vec4(vWorldPosition + dir * 0.001, 1.0)).xyz;
+        dir = normalize((inv * vec4(dir, 0.0)).xyz);
+        for (float i = 0.0; i < 8.0; i++) {
+          if (i >= bounces) break;
+          uvec4 fi = uvec4(0u); vec3 fn = vec3(0.0, 0.0, 1.0); vec3 bc = vec3(0.0); float side = 1.0; float dist = 0.0;
+          bvhIntersectFirstHit(bvh, ro, dir, fi, fn, bc, side, dist);
+          vec3 hit = ro + dir * max(dist - 0.001, 0.0);
+          vec3 t = refract(dir, fn, eta);
+          if (length(t) != 0.0) { dir = t; break; }
+          dir = reflect(dir, fn);
+          ro = hit + dir * 0.01;
+        }
+        return normalize((modelMatrix * vec4(dir, 0.0)).xyz);
+      }` + GEM_SHADER_MAIN,
+  });
+}
+
+const METALS = { pt: 0xdcdde0, yg: 0xf1c97a, rg: 0xeaa58a, wg: 0xe6e4df };
+const metalKey = Q.get('metal') || CFG.metal || 'pt';
+const metalMat = new THREE.MeshStandardMaterial({ color: METALS[metalKey] || METALS.pt, metalness: 1, roughness: 0.1, envMapIntensity: 1.2 });
+document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === metalKey));
+const diamondMats = [];
+let radius = 1, elev = 0.55;
+
+const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(CFG.model || 'model.glb');
+const ring = gltf.scene;
+
+const box = new THREE.Box3().setFromObject(ring);
+const size = box.getSize(new THREE.Vector3()).length();
+ring.position.sub(box.getCenter(new THREE.Vector3()));
+scene.add(ring);
+ring.updateMatrixWorld(true);
+ring.traverse((o) => {
+  if (!o.isMesh) return;
+  if (!o.name.startsWith('diamond')) { o.material = metalMat; return; }
+  const F = GEM === 'bvh' ? null : roundFrame(o);
+  const m = F ? analyticGem(F) : bvhGem(o.geometry);
+  o.material = m; diamondMats.push(m);
+});
+// coloured centre stone (config.json "gem_colors": {"largest": "#ff5c9a"}): tints the biggest stone, e.g. a pink diamond
+if (CFG.gem_colors && CFG.gem_colors.largest) {
+  let big = null, bigSize = 0;
+  ring.traverse((o) => {
+    if (!o.isMesh || !o.name.startsWith('diamond')) return;
+    const s = new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3()).length();
+    if (s > bigSize) { bigSize = s; big = o; }
+  });
+  if (big) big.material.uniforms.color.value.set(CFG.gem_colors.largest);
+}
+
+// fit the jewel to the free area above the controls: the narrower of the two fields of view decides
+function fit() {
+  if (CAPTURE) { radius = size * 1.75; return; }
+  const vf = THREE.MathUtils.degToRad(camera.fov) / 2;
+  const hf = Math.atan(Math.tan(vf) * camera.aspect);
+  radius = 0.38 * size / Math.sin(Math.min(vf, hf));
+}
+fit();
+camera.position.set(radius * 0.6, radius * elev, radius * 0.6).setLength(radius);
+camera.near = size / 100; camera.far = size * 20; camera.updateProjectionMatrix();
+controls.minDistance = size * 0.5; controls.maxDistance = size * 5;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W(), H()), 0.22, 0.5, 0.92);
+composer.addPass(bloom);
+// Israel prefers the clean look: sparkle (bloom) off unless config.json says "bloom": true
+bloom.enabled = CFG.bloom === true;
+document.getElementById('bloom').classList.toggle('on', bloom.enabled);
+composer.addPass(new OutputPass());
+
+// compile every shader before the first frame, so the jewel appears complete instead of stalling on first draw
+await renderer.compileAsync(scene, camera);
+document.getElementById('loading').remove();
+
+function onResize() {
+  if (CAPTURE) return;
+  renderer.setSize(W(), H()); composer.setSize(W(), H());
+  camera.aspect = W() / H(); camera.updateProjectionMatrix();
+  const d = radius; fit(); camera.position.multiplyScalar(radius / d);
+}
+new ResizeObserver(onResize).observe(view);
+document.getElementById('rot').onclick = (e) => { controls.autoRotate = !controls.autoRotate; e.currentTarget.classList.toggle('on', controls.autoRotate); };
+document.getElementById('bloom').onclick = (e) => { bloom.enabled = !bloom.enabled; e.currentTarget.classList.toggle('on', bloom.enabled); };
+document.querySelectorAll('[data-metal]').forEach((b) => b.onclick = () => {
+  metalMat.color.setHex(METALS[b.dataset.metal]);
+  document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x === b));
+});
+
+const res = new THREE.Vector2();
+function draw() {
+  renderer.getDrawingBufferSize(res);
+  for (const m of diamondMats) m.uniforms.resolution.value.copy(res);
+  // without sparkle, skip the post-processing chain: two full-screen passes fewer per frame
+  if (bloom.enabled) composer.render(); else renderer.render(scene, camera);
+}
+if (CAPTURE) {
+  // one full turn around the vertical axis at a fixed elevation, for the turntable video
+  window.__frame = (i, n) => {
+    const a = 2 * Math.PI * i / n + Math.PI / 4;
+    const h = Math.hypot(1, elev);
+    camera.position.set(radius * Math.cos(a) / h, radius * elev / h, radius * Math.sin(a) / h);
+    camera.lookAt(0, 0, 0); camera.updateMatrixWorld();
+    draw();
+    return renderer.domElement.toDataURL('image/png');
+  };
+  draw();
+  window.__ready = true;
+} else {
+  // frame-time watcher: a slow GPU gets a lower resolution (down to 0.75) so touches and buttons stay responsive
+  let last = performance.now(), acc = 0, cnt = 0;
+  renderer.setAnimationLoop((now) => {
+    acc += now - last; last = now; cnt++;
+    if (cnt === 30) {
+      if (acc / cnt > 40 && pixelRatio > 0.75) {
+        pixelRatio = Math.max(0.75, pixelRatio - 0.25);
+        renderer.setPixelRatio(pixelRatio); composer.setPixelRatio(pixelRatio);
+      }
+      acc = 0; cnt = 0;
+    }
+    controls.update(); draw();
+  });
+}
+</script>
+</body>
+</html>
