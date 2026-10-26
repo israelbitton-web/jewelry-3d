@@ -1,15 +1,18 @@
 <!doctype html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>תכשיט בתלת-ממד</title>
+<title>Jewel in 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --bg: #efeeeb; --ink: #1d1d1f; --muted: #6b6b70; --line: #d6d4cf; --accent: #8a6d3b; --panel: rgba(255,255,255,.78); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); } }
-  :root[data-theme="dark"] { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); }
-  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Arial, sans-serif; overflow: hidden; overscroll-behavior: none; }
+  :root { --bg: #0c0b0a; --ink: #eee7da; --muted: #8a847b; --line: #2b2722; --accent: #b08d57; --panel: rgba(22,19,15,.86); }
+  h1 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; letter-spacing: .02em; }
+  .brand { font-size: 10px; letter-spacing: .22em; color: var(--muted); text-align: center; margin-top: 4px; }
+  @media (pointer: coarse) { .brand { font-size: 11px; } }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: "Hanken Grotesk", -apple-system, "Segoe UI", Arial, sans-serif; overflow: hidden; overscroll-behavior: none; }
   body { display: flex; flex-direction: column; height: 100dvh; }
   /* the jewel gets all the space above the controls, so the panel never covers it */
   #view { position: relative; flex: 1; min-height: 0; }
@@ -32,22 +35,22 @@
     .ctl button { font-size: 16px; min-height: 48px; padding: 8px 6px; grid-column: span 2; }
     .ctl button.half { grid-column: span 3; }
   }
-  body.capture .bar, body.capture .hint, body.capture #loading { display: none; }
+  body.capture .brand, body.capture .bar, body.capture .hint, body.capture #loading { display: none; }
 </style>
 </head>
 <body>
 <div id="view">
-  <div id="loading">טוען…</div>
-  <div class="hint" id="hint">גררו באצבע כדי לסובב · צביטה לזום</div>
+  <div id="loading">Loading…</div>
+  <div class="hint" id="hint">Drag to rotate · pinch to zoom</div>
 </div>
 <div class="bar">
-  <div><h1 id="title"></h1><div class="sub" id="sub"></div></div>
+  <div><h1 id="title"></h1><div class="sub" id="sub"></div><div class="brand">ISRAEL BITTON · JEWELRY CAD ATELIER</div></div>
   <div class="ctl">
-    <button data-metal="pt"><span class="sw" style="background:#dcdde0"></span>פלטינה</button>
-    <button data-metal="yg"><span class="sw" style="background:#f1c97a"></span>זהב צהוב</button>
-    <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span>זהב אדום</button>
-    <button id="bloom" class="half">ניצוץ</button>
-    <button id="rot" class="on half">סיבוב</button>
+    <button data-metal="pt"><span class="sw" style="background:#dcdde0"></span>Platinum</button>
+    <button data-metal="yg"><span class="sw" style="background:#f1c97a"></span>Yellow</button>
+    <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span>Rose</button>
+    <button id="bloom" class="half">Sparkle</button>
+    <button id="rot" class="on half">Rotate</button>
   </div>
 </div>
 
@@ -73,7 +76,7 @@ const Q = new URLSearchParams(location.search);
 const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
-const CFG = await fetch('config.json').then((r) => r.ok ? r.json() : {}).catch(() => ({}));
+const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
 document.getElementById('title').textContent = CFG.title || '';
 document.getElementById('sub').textContent = CFG.subtitle || '';
 if (CFG.title) document.title = CFG.title;
@@ -97,6 +100,7 @@ controls.enableDamping = true; controls.autoRotate = !CAPTURE; controls.autoRota
 controls.addEventListener('start', () => { document.getElementById('hint').style.opacity = 0; });
 
 function setBackground() {
+  scene.background = new THREE.Color(CFG.background || 0x0c0b0a); return;
   if (CAPTURE || CFG.background) { scene.background = new THREE.Color(CFG.background || 0xefeeeb); return; }
   const dark = document.documentElement.dataset.theme === 'dark' ||
     (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
@@ -179,7 +183,7 @@ function roundFrame(mesh) {
     eig.push({ l, x: new THREE.Vector3(...x) });
     for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) M[a][b] -= l * x[a] * x[b];
   }
-  if (Math.abs(eig[0].l - eig[1].l) > 0.08 * eig[0].l) return null;
+  const round = Math.abs(eig[0].l - eig[1].l) <= 0.08 * eig[0].l;
   const axis = eig[2].x.normalize();
   let lo = Infinity, hi = -Infinity, R = 0;
   for (const p of P) { const t = p.clone().sub(c).dot(axis); lo = Math.min(lo, t); hi = Math.max(hi, t); R = Math.max(R, p.clone().sub(c).addScaledVector(axis, -t).length()); }
@@ -188,20 +192,32 @@ function roundFrame(mesh) {
   let gs = 0, gn = 0;
   for (const p of P) { const t = p.clone().sub(c).dot(axis); if (p.clone().sub(c).addScaledVector(axis, -t).length() > 0.97 * R) { gs += t; gn++; } }
   const centre = c.clone().addScaledVector(axis, gn ? gs / gn : 0);
-  const u = new THREE.Vector3(1, 0, 0); if (Math.abs(u.dot(axis)) > 0.9) u.set(0, 1, 0);
+  const u = round ? new THREE.Vector3(1, 0, 0) : eig[0].x.clone(); if (round && Math.abs(u.dot(axis)) > 0.9) u.set(0, 1, 0);
   u.addScaledVector(axis, -u.dot(axis)).normalize();
   const w = new THREE.Vector3().crossVectors(axis, u);
-  return { centre, axis, u, w, R, table: hi - (gn ? gs / gn : 0) };
+  if (round) return { centre, axis, u, w, R, S: 1, table: hi - (gn ? gs / gn : 0) };
+  // oval: girdle = ellipse (Ru along u, Rw along w); any other outline (cushion, pear, marquise) keeps the mesh tracer
+  let Ru = 0, Rw = 0;
+  for (const p of P) { const d = p.clone().sub(c); Ru = Math.max(Ru, Math.abs(d.dot(u))); Rw = Math.max(Rw, Math.abs(d.dot(w))); }
+  let out = 0, rim = 0;
+  for (const p of P) {
+    const d = p.clone().sub(c), e = Math.hypot(d.dot(u) / Ru, d.dot(w) / Rw);
+    if (e > 1.03) out++; if (e > 0.97) rim++;
+  }
+  if (out > 0 || rim < 16 || Ru / Rw > 2.2) return null;
+  return { centre, axis, u, w, R: Rw, S: Rw / Ru, table: hi - (gn ? gs / gn : 0) };
 }
 
 function analyticGem(F) {
   const un = gemUniforms();
   Object.assign(un, { gC: { value: F.centre }, gU: { value: F.u }, gW: { value: F.w }, gA: { value: F.axis },
-    gR: { value: F.R }, gT: { value: Math.min(F.table, 0.36 * F.R) } });
+    gR: { value: F.R }, gS: { value: F.S }, gT: { value: Math.min(F.table, 0.36 * F.R) } });
   return new THREE.ShaderMaterial({
     uniforms: un, vertexShader: GEM_VERTEX,
     fragmentShader: GEM_SHADER_HEAD + /* glsl */`
       uniform vec3 gC; uniform vec3 gU; uniform vec3 gW; uniform vec3 gA; uniform float gR; uniform float gT;
+      // oval stones: traced in a space scaled by gS along u, where the girdle is the circle gR (gS = 1 for round)
+      uniform float gS;
       const float PI2 = 6.2831853;
       vec3 toL(vec3 d) { return vec3(dot(d, gU), dot(d, gW), dot(d, gA)); }
       vec3 toW(vec3 d) { return gU * d.x + gW * d.y + gA * d.z; }
@@ -223,16 +239,18 @@ function analyticGem(F) {
         }
       }
       vec3 traceOut(vec3 rd, vec3 n, float eta) {
+        vec3 S = vec3(gS, 1.0, 1.0);
         vec3 dir = toL(refract(rd, n, 1.0 / eta));
-        vec3 ro = toL(vWorldPosition - gC) + dir * gR * 0.002;
+        vec3 ro = S * toL(vWorldPosition - gC) + S * dir * gR * 0.002;
         for (float i = 0.0; i < 8.0; i++) {
           if (i >= bounces) break;
-          float t; vec3 nh; hitFacet(ro, dir, t, nh);
-          ro += dir * t;
+          float t; vec3 nh; hitFacet(ro, S * dir, t, nh);
+          ro += S * dir * t;
+          nh = normalize(S * nh);
           vec3 tr = refract(dir, -nh, eta);
           if (dot(tr, tr) > 0.0) return normalize(toW(tr));
           dir = reflect(dir, nh);
-          ro += dir * gR * 0.002;
+          ro += S * dir * gR * 0.002;
         }
         return normalize(toW(dir));
       }` + GEM_SHADER_MAIN,
@@ -275,7 +293,7 @@ const metalKey = Q.get('metal') || CFG.metal || 'pt';
 const metalMat = new THREE.MeshStandardMaterial({ color: METALS[metalKey] || METALS.pt, metalness: 1, roughness: 0.1, envMapIntensity: 1.2 });
 document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === metalKey));
 const diamondMats = [];
-let radius = 1, elev = 0.55;
+let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : 0.55;   // ?elev= camera height (capture stills)
 
 const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
 const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(CFG.model || 'model.glb');
@@ -293,6 +311,16 @@ ring.traverse((o) => {
   const m = F ? analyticGem(F) : bvhGem(o.geometry);
   o.material = m; diamondMats.push(m);
 });
+// coloured centre stone (config.json "gem_colors": {"largest": "#ff5c9a"}): tints the biggest stone, e.g. a pink diamond
+if (CFG.gem_colors && CFG.gem_colors.largest) {
+  let big = null, bigSize = 0;
+  ring.traverse((o) => {
+    if (!o.isMesh || !o.name.startsWith('diamond')) return;
+    const s = new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3()).length();
+    if (s > bigSize) { bigSize = s; big = o; }
+  });
+  if (big) big.material.uniforms.color.value.set(CFG.gem_colors.largest);
+}
 
 // fit the jewel to the free area above the controls: the narrower of the two fields of view decides
 function fit() {
