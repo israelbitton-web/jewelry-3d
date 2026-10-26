@@ -3,5 +3,20 @@
  "subtitle": "Cushion 6.80 mm · 14 × 0.15 ct · hidden halo · 18K yellow gold",
  "metal": "yg",
  "model": "model.glb",
- "gem_colors": {"largest": "#fff8e6"}
+ "gem_colors": {
+  "largest": "#fff8e6"
+ },
+ "subtitles": {
+  "en": "Cushion 6.80 mm · 14 × 0.15 ct · hidden halo · 18K yellow gold",
+  "fr": "Coussin 6,80 mm · 14 × 0,15 ct · halo caché · or jaune 18 carats",
+  "es": "Cojín 6,80 mm · 14 × 0,15 ct · halo oculto · oro amarillo de 18 k",
+  "de": "Kissen 6,80 mm · 14 × 0,15 ct · verdeckter Halo · 18 K Gelbgold",
+  "it": "Cuscino 6,80 mm · 14 × 0,15 ct · halo nascosto · oro giallo 18 kt",
+  "pt": "Almofada 6,80 mm · 14 × 0,15 ct · halo oculto · ouro amarelo 18 k",
+  "ru": "Кушон 6,80 мм · 14 × 0,15 ct · скрытый ореол · жёлтое золото 750",
+  "ar": "كوشن 6.80 مم · 14 × 0.15 قيراط · هالة مخفية · ذهب أصفر عيار 18",
+  "he": "קושן 6.80 מ״מ · 14 × 0.15 קראט · הילה נסתרת · זהב צהוב 18K",
+  "zh": "枕形 6.80 毫米 · 14 × 0.15 克拉 · 隐藏光环 · 18K 黄金",
+  "ja": "クッション 6.80 mm · 14 × 0.15 ct · 隠れハロー · 18K イエローゴールド"
+ }
 }

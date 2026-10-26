@@ -44,16 +44,44 @@
   <div class="hint" id="hint">Drag to rotate · pinch to zoom</div>
 </div>
 <div class="bar">
-  <div><h1 id="title"></h1><div class="sub" id="sub"></div><div class="brand">ISRAEL BITTON · JEWELRY CAD ATELIER</div></div>
+  <div><h1 id="title" translate="no" class="notranslate"></h1><div class="sub" id="sub"></div><div class="brand" translate="no">ISRAEL BITTON · JEWELRY CAD ATELIER</div></div>
   <div class="ctl">
-    <button data-metal="pt"><span class="sw" style="background:#dcdde0"></span>Platinum</button>
-    <button data-metal="yg"><span class="sw" style="background:#f1c97a"></span>Yellow</button>
-    <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span>Rose</button>
+    <button data-metal="pt"><span class="sw" style="background:#dcdde0"></span><span class="lbl">Platinum</span></button>
+    <button data-metal="yg"><span class="sw" style="background:#f1c97a"></span><span class="lbl">Yellow</span></button>
+    <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span><span class="lbl">Rose</span></button>
     <button id="bloom" class="half">Sparkle</button>
     <button id="rot" class="on half">Rotate</button>
   </div>
 </div>
 
+<script>
+// phone language -> UI language (?lang=xx overrides); jewel names and the brand line are translate="no"
+(() => {
+  const T = {
+    en: ['Loading…', 'Drag to rotate · pinch to zoom', 'Platinum', 'Yellow', 'Rose', 'Sparkle', 'Rotate'],
+    fr: ['Chargement…', 'Glissez pour tourner · pincez pour zoomer', 'Platine', 'Or jaune', 'Or rose', 'Éclat', 'Rotation'],
+    es: ['Cargando…', 'Desliza para girar · pellizca para ampliar', 'Platino', 'Oro amarillo', 'Oro rosa', 'Brillo', 'Girar'],
+    de: ['Wird geladen…', 'Zum Drehen ziehen · zum Zoomen zusammendrücken', 'Platin', 'Gelbgold', 'Roségold', 'Funkeln', 'Drehen'],
+    it: ['Caricamento…', 'Trascina per ruotare · pizzica per ingrandire', 'Platino', 'Oro giallo', 'Oro rosa', 'Scintillio', 'Ruota'],
+    pt: ['Carregando…', 'Arraste para girar · pince para ampliar', 'Platina', 'Ouro amarelo', 'Ouro rosé', 'Brilho', 'Girar'],
+    ru: ['Загрузка…', 'Проведите, чтобы вращать · сведите пальцы для масштаба', 'Платина', 'Жёлтое золото', 'Розовое золото', 'Блеск', 'Вращение'],
+    ar: ['جارٍ التحميل…', 'اسحب للتدوير · قرّب الإصبعين للتكبير', 'بلاتين', 'ذهب أصفر', 'ذهب وردي', 'لمعان', 'تدوير'],
+    he: ['טוען…', 'גררו כדי לסובב · צביטה לזום', 'פלטינה', 'זהב צהוב', 'זהב אדום', 'ניצוץ', 'סיבוב'],
+    zh: ['加载中…', '拖动旋转 · 双指缩放', '铂金', '黄金', '玫瑰金', '闪耀', '旋转'],
+    ja: ['読み込み中…', 'ドラッグで回転 · ピンチで拡大', 'プラチナ', 'イエローゴールド', 'ローズゴールド', 'きらめき', '回転'],
+  };
+  const want = (new URLSearchParams(location.search).get('lang') || navigator.language || 'en').toLowerCase().slice(0, 2);
+  const L = T[want] ? want : 'en';
+  window.__LANG = L;
+  const t = T[L];
+  document.documentElement.lang = L;
+  if (L === 'ar' || L === 'he') document.documentElement.dir = 'rtl';
+  const set = (sel, i) => { const e = document.querySelector(sel); if (e) e.textContent = t[i]; };
+  set('#loading', 0); set('#hint', 1);
+  set('[data-metal="pt"] .lbl', 2); set('[data-metal="yg"] .lbl', 3); set('[data-metal="rg"] .lbl', 4);
+  set('#bloom', 5); set('#rot', 6);
+})();
+</script>
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
@@ -78,7 +106,7 @@ const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
 document.getElementById('title').textContent = CFG.title || '';
-document.getElementById('sub').textContent = CFG.subtitle || '';
+document.getElementById('sub').textContent = (CFG.subtitles && CFG.subtitles[window.__LANG]) || CFG.subtitle || '';
 if (CFG.title) document.title = CFG.title;
 // ?mobile=1 / ?mobile=0 forces the phone / desktop render path (to compare both on one machine)
 const MOBILE = Q.has('mobile') ? Q.get('mobile') === '1' : matchMedia('(pointer: coarse)').matches;
