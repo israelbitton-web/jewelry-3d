@@ -2,5 +2,18 @@
  "title": "Alice",
  "subtitle": "Cushion 7.36 mm · 18 diamonds · Platinum 950",
  "metal": "pt",
- "model": "model.glb"
+ "model": "model.glb",
+ "subtitles": {
+  "en": "Cushion 7.36 mm · 18 diamonds · Platinum 950",
+  "fr": "Coussin 7,36 mm · 18 diamants · Platine 950",
+  "es": "Cojín 7,36 mm · 18 diamantes · Platino 950",
+  "de": "Kissen 7,36 mm · 18 Diamanten · Platin 950",
+  "it": "Cuscino 7,36 mm · 18 diamanti · Platino 950",
+  "pt": "Almofada 7,36 mm · 18 diamantes · Platina 950",
+  "ru": "Кушон 7,36 мм · 18 бриллиантов · Платина 950",
+  "ar": "كوشن 7.36 مم · 18 ماسة · بلاتين 950",
+  "he": "קושן 7.36 מ״מ · 18 יהלומים · פלטינה 950",
+  "zh": "枕形 7.36 毫米 · 18 颗钻石 · 铂金 950",
+  "ja": "クッション 7.36 mm · ダイヤモンド18石 · プラチナ950"
+ }
 }
