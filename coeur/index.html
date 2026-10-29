@@ -55,7 +55,7 @@
   .details { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--press); }
   .details.open { grid-template-rows: 1fr; }
   .details > div { overflow: hidden; }
-  .details .scroll { max-height: 42vh; overflow-y: auto; padding: 4px 2px 6px; -webkit-overflow-scrolling: touch; }
+  .details .scroll { max-height: 42vh; overflow-y: auto; padding: 4px 12px 6px; -webkit-overflow-scrolling: touch; }
   .details h3 { font-size: 12px; font-weight: 600; color: var(--muted); margin: 12px 0 4px; letter-spacing: .02em; }
   .details .r { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; }
   .details .r span:first-child { color: var(--muted); }
@@ -197,7 +197,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793291528';
+const BUILD = '1793291715';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
