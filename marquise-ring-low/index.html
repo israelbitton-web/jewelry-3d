@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת מרקיזה - עגולה נמוכה">
 <meta property="og:description" content="מרקיזה 9.02 קראט · מידה 48 · זהב 18K">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/preview.jpg?v=1793296184">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/preview.jpg?v=1793296339">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -202,7 +202,7 @@
   </div>
   <div class="toast" id="toast" hidden><span id="toastTxt">גודל אמיתי על המסך · 1:1</span><button id="calibBtn">לא מדויק? כיול</button></div>
   <div class="calib" id="calib" hidden><p id="calibTxt"></p><div class="card" id="calibCard"></div>
-    <input type="range" id="calibRange" min="3" max="9.5" step="0.01" aria-label="1:1"><button id="calibSave">שמירה</button></div>
+    <input type="range" id="calibRange" min="1.2" max="12" step="0.01" aria-label="1:1"><button id="calibSave">שמירה</button></div>
   <div class="tools">
     <button id="real"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7" width="25" height="18" rx="2.5"/><path d="M9 7v4M14 7v3M19 7v4M24 7v3"/><text x="16" y="21.5" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor" stroke="none" font-family="-apple-system, Arial, sans-serif">1:1</text></svg><span class="vh">גודל אמיתי</span></button>
     <button id="bloom"><svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><path class="tw1" d="M13 3l2.3 8.2L23.5 13.5l-8.2 2.3L13 24l-2.3-8.2L2.5 13.5l8.2-2.3z"/><path class="tw2" d="M25 2l.9 2.6 2.6.9-2.6.9L25 9l-.9-2.6-2.6-.9 2.6-.9z"/><path class="tw3" d="M24.5 18.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg><span class="vh">ניצוץ</span></button>
@@ -254,7 +254,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793296184';
+const BUILD = '1793296339';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -763,14 +763,18 @@ function setReal(on) {
   document.getElementById('calibBtn').hidden = cal;          // once calibrated, never asked again (long-press 1:1 to redo)
   clearTimeout(toastT); toast.classList.remove('fade'); toast.hidden = !on;
   if (on) toastT = setTimeout(() => toast.classList.add('fade'), cal ? 2200 : 4500);
-  if (on) { realD = realDistance(); moveTo(realD); } else { fit(); moveTo(radius); }
+  if (on) { realD = realDistance(); controls.maxDistance = Math.max(size * 5, realD * 1.6); controls.minDistance = Math.min(size * 0.05, realD * 0.5); moveTo(realD); }
+  else { fit(); moveTo(radius); }
 }
 let lpT = 0, lpDone = false;   // long-press on 1:1 = calibrate again
 const realBtn = document.getElementById('real');
 realBtn.addEventListener('pointerdown', () => { lpDone = false; lpT = setTimeout(() => { lpDone = true; document.getElementById('calibBtn').onclick(); }, 700); });
 ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => realBtn.addEventListener(ev, () => clearTimeout(lpT)));
 realBtn.onclick = () => { if (lpDone) { lpDone = false; return; } setReal(!realOn); };
-controls.addEventListener('end', () => { if (realOn && Math.abs(camera.position.length() - realD) / realD > 0.03) setReal(false); });
+// only a zoom leaves 1:1 (turning the jewel keeps it): compare the distance before and after each gesture
+let gestD = 0;
+controls.addEventListener('start', () => { gestD = camera.position.length(); });
+controls.addEventListener('end', () => { if (realOn && Math.abs(camera.position.length() - gestD) / gestD > 0.04) setReal(false); });
 document.getElementById('calibBtn').onclick = () => {
   const cal = document.getElementById('calib'), card = document.getElementById('calibCard'), rg = document.getElementById('calibRange');
   const draw = () => { const k = +rg.value; card.style.width = (53.98 * k) + 'px'; card.style.height = (85.6 * k) + 'px'; };
