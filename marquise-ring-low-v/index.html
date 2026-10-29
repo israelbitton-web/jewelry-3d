@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת מרקיזה - עגולה נמוכה, שן V">
 <meta property="og:description" content="מרקיזה 9.02 קראט · שן V · מידה 48 · זהב 18K">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/preview.jpg?v=1793293902">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/preview.jpg?v=1793294339">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -218,7 +218,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793293902';
+const BUILD = '1793294339';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -525,7 +525,7 @@ ring.traverse((o) => {
 // diamond, pink diamond. Side stones stay diamonds. ?stone=<key> or config.json "center_stone" picks the start colour,
 // "gem_colors": {"largest": "#hex"} still forces a custom tint, "stone_buttons": false hides the row.
 const STONES = {
-  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#1d4cff', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
+  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#0a2c8a', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
   ruby: { color: '#c8003c', ior: 1.77 }, yellow: { color: '#ffc000', ior: 2.42 }, pink: { color: '#ff8fb8', ior: 2.42 },
 };
 const gemSizes = [];
