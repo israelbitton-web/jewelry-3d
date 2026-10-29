@@ -11,16 +11,17 @@
 <meta property="og:title" content="טבעת למעיין">
 <meta property="og:description" content="יהלום ורוד אובל 8.05 קראט · זהב צהוב 18K">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/maayan-ring/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/maayan-ring/preview.jpg?v=1793294339">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/maayan-ring/preview.jpg?v=1793294650">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <!--/og-->
 <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@300&display=swap" rel="stylesheet">
 <style>
-  :root { --bg: #efeeeb; --ink: #1d1d1f; --muted: #6b6b70; --line: #d6d4cf; --accent: #8a6d3b; --panel: rgba(255,255,255,.78); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); } }
-  :root[data-theme="dark"] { --bg: #151518; --ink: #f1f0ec; --muted: #a3a3a8; --line: #2e2e33; --accent: #d9b77a; --panel: rgba(28,28,32,.78); }
+  :root { --bg: #efeeeb; --ink: #1d1d1f; --muted: #6b6b70; --line: #d6d4cf; --accent: #8a6d3b; --panel: rgba(255,255,255,.78); --card: rgba(255,255,255,.82); --card-line: #d2d3d7; --cue: #2a2b30; }
+  /* dark = a deep royal brown (never black): the gold and the stones keep their light */
+  @media (prefers-color-scheme: dark) { :root[data-theme="auto"] { --bg: #2a1e17; --ink: #f2ebe1; --muted: #b9a999; --line: #47362b; --accent: #dcbc84; --panel: rgba(58,43,33,.82); --card: rgba(255,248,238,.06); --card-line: rgba(255,248,238,.18); --cue: #f2ebe1; } }
+  :root[data-theme="dark"] { --bg: #2a1e17; --ink: #f2ebe1; --muted: #b9a999; --line: #47362b; --accent: #dcbc84; --panel: rgba(58,43,33,.82); --card: rgba(255,248,238,.06); --card-line: rgba(255,248,238,.18); --cue: #f2ebe1; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Arial, sans-serif; overflow: hidden; overscroll-behavior: none; }
   body { display: flex; flex-direction: column; height: 100dvh; }
   /* the jewel gets all the space above the controls, so the panel never covers it */
@@ -57,20 +58,20 @@
   /* the name block is ONE big button: the whole card opens the full details and closes them again; a round chevron
      and a written hint say so, and it stands apart from the ingots so a thumb never hits the wrong one */
   .head { width: 100%; display: flex; align-items: center; gap: 12px; text-align: start; min-height: 64px; padding: 10px 12px;
-          border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--ink) 3%, transparent); color: var(--ink);
+          border: 1px solid var(--card-line); border-radius: 14px; background: var(--card); color: var(--ink);
           margin-bottom: 6px; transition: transform .2s var(--press), background .2s var(--press); }
   .head:disabled { cursor: default; border-color: transparent; background: none; }
   .head:disabled .disc, .head:disabled .hint { display: none; }
-  .head:not(:disabled):active { transform: scale(.985); background: color-mix(in srgb, var(--accent) 10%, transparent); }
-  .head.on { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  .head:not(:disabled):active { transform: scale(.985); background: color-mix(in srgb, var(--ink) 7%, var(--card)); }
+  .head.on { background: var(--card); }
   .htxt { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
   .ttl { font-size: 16px; font-weight: 600; text-align: center; }
-  .hint { margin-top: 4px; color: var(--accent); font-size: 14px; font-weight: 500; }
-  .disc { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--accent);
-          border: 1.5px solid color-mix(in srgb, var(--accent) 60%, transparent); }
+  .hint { margin-top: 4px; color: var(--cue); font-size: 14px; font-weight: 500; }
+  .disc { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--cue);
+          border: 1.5px solid var(--card-line); background: var(--card); }
   .disc svg { width: 18px; height: 18px; transition: transform .3s var(--press); }
   .head[aria-expanded="true"] .disc svg { transform: rotate(180deg); }
-  .head[aria-expanded="true"] { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+  .head[aria-expanded="true"] { border-color: color-mix(in srgb, var(--cue) 35%, transparent); }
   .details { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--press); }
   .details.open { grid-template-rows: 1fr; }
   .details > div { overflow: hidden; }
@@ -124,7 +125,7 @@
   #bloom.on .tw3 { animation: twinkle 1.6s ease-in-out 1s infinite; transform-origin: 24.5px 22px; }
   @keyframes twinkle { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.55); opacity: .55; } }
   /* the stage can be turned by hand: a quiet 360 mark top-left, and a finger that shows the gesture once */
-  .badge360 { position: absolute; left: 14px; top: max(12px, env(safe-area-inset-top)); color: var(--muted); pointer-events: none; z-index: 2; }
+  .badge360 { position: absolute; right: 12px; bottom: 14px; color: var(--muted); pointer-events: none; z-index: 2; }
   .badge360 svg { width: 50px; height: auto; display: block; }
   .swipe { position: absolute; left: 50%; bottom: 18%; width: 120px; margin-left: -60px; color: var(--ink); pointer-events: none; z-index: 2;
            transition: opacity .5s var(--press); }
@@ -141,6 +142,13 @@
   .langs button::after { content: ''; position: absolute; left: 50%; bottom: 7px; width: 14px; height: 2px; margin-left: -7px; border-radius: 2px;
                          background: var(--accent); opacity: 0; transition: opacity .25s var(--press); }
   .langs button.on::after { opacity: 1; }
+  /* light / dark switch: top-left of the stage, sun in the dark, moon in the light */
+  .theme { position: absolute; left: 8px; top: max(6px, env(safe-area-inset-top)); width: 46px; height: 46px; min-height: 0; padding: 0; border: 0;
+           background: none; border-radius: 50%; color: var(--muted); display: grid; place-items: center; z-index: 3; }
+  .theme svg { width: 26px; height: 26px; }
+  .theme .sun { display: none; }
+  :root[data-theme="dark"] .theme .sun { display: block; } :root[data-theme="dark"] .theme .moon { display: none; }
+  .theme.pop svg { animation: tap .4s var(--press); }
   .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   @media (prefers-reduced-motion: reduce) { .obj.pop img, .obj.pop .lbl, .obj.pop::after, .tools button.pop svg, #rot.on .spin, #bloom.on [class^=tw], .swipe .finger, .swipe .trail { animation: none; } .glint { display: none; } }
   #loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
@@ -154,12 +162,13 @@
     .ctl.metals button { grid-column: auto; padding: 0; min-height: 0; }
     .ctl.gems button { grid-column: span 1; padding: 0; min-height: 0; width: auto; height: auto; aspect-ratio: 1; }
   }
-  body.capture .bar, body.capture .langs, body.capture .swipe, body.capture .badge360, body.capture .tools, body.capture #loading { display: none; }
+  body.capture .bar, body.capture .langs, body.capture .swipe, body.capture .badge360, body.capture .theme, body.capture .tools, body.capture #loading { display: none; }
 </style>
 </head>
 <body>
 <div id="view">
   <div id="loading">טוען…</div>
+  <button class="theme" id="theme" aria-label="תצוגה כהה / בהירה"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
   <div class="badge360" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="29" r="15" stroke-width="2.2"/><ellipse cx="32" cy="29" rx="6.5" ry="15" stroke-width="1.8"/><path d="M17 29h30" stroke-width="1.8"/><path d="M10.5 36.5C7.5 38 6 39.6 6 41.4c0 5 11.6 9.1 26 9.1s26-4.1 26-9.1c0-1.8-1.5-3.4-4.5-4.9" stroke-width="2.4"/><path d="M37.5 46.2l-4 4.3 4.5 3.5" stroke-width="2.4"/><text x="32" y="62.5" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor" stroke="none" font-family="inherit">360</text><circle cx="40.6" cy="55.6" r="1.3" stroke-width="1.1"/></svg></div>
   <div class="swipe" id="hint" aria-live="polite"><svg viewBox="0 0 120 70" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path class="trail" d="M18 20c12-9 72-9 84 0" stroke-width="2" stroke-dasharray="2 5"/><path class="trail" d="M14 16l4 4-5 3M106 16l-4 4 5 3" stroke-width="2"/>
@@ -218,7 +227,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793294339';
+const BUILD = '1793294650';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -313,8 +322,16 @@ function setBackground() {
   if (CAPTURE || CFG.background) { scene.background = new THREE.Color(CFG.background || 0xefeeeb); return; }
   const dark = document.documentElement.dataset.theme === 'dark' ||
     (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
-  scene.background = new THREE.Color(dark ? 0x151518 : 0xefeeeb);
+  scene.background = new THREE.Color(dark ? 0x2a1e17 : 0xefeeeb);
 }
+// the visitor's light / dark choice is remembered (default: light)
+try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch {}
+document.getElementById('theme').onclick = (e) => {
+  const d = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = d; try { localStorage.setItem('theme', d); } catch {}
+  setBackground();
+  const b = e.currentTarget; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+};
 setBackground();
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setBackground);
 
@@ -525,7 +542,7 @@ ring.traverse((o) => {
 // diamond, pink diamond. Side stones stay diamonds. ?stone=<key> or config.json "center_stone" picks the start colour,
 // "gem_colors": {"largest": "#hex"} still forces a custom tint, "stone_buttons": false hides the row.
 const STONES = {
-  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#0a2c8a', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
+  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#08206e', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
   ruby: { color: '#c8003c', ior: 1.77 }, yellow: { color: '#ffc000', ior: 2.42 }, pink: { color: '#ff8fb8', ior: 2.42 },
 };
 const gemSizes = [];
