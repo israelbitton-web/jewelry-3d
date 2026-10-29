@@ -23,6 +23,11 @@
            border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   button.on { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-inline-end: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
+  /* centre stone colours: one row of small swatch buttons, shown only when the jewel has a clear centre stone */
+  .gems { margin-top: 8px; }
+  .gems[hidden] { display: none !important; }
+  .gems button { padding: 6px 10px; min-height: 36px; font-size: 13px; }
+  .gems .sw { width: 14px; height: 14px; }
   .hint { position: absolute; top: max(12px, env(safe-area-inset-top)); inset-inline: 0; text-align: center; font-size: 13px; color: var(--muted); pointer-events: none; transition: opacity .6s; }
   #loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
   /* touch screens: big, thumb-friendly controls in two even rows */
@@ -31,6 +36,9 @@
     .ctl { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
     .ctl button { font-size: 16px; min-height: 48px; padding: 8px 6px; grid-column: span 2; }
     .ctl button.half { grid-column: span 3; }
+    .gems button { grid-column: span 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+                   font-size: 12px; min-height: 52px; padding: 6px 2px; border-radius: 14px; }
+    .gems .sw { width: 18px; height: 18px; margin: 0; }
   }
   body.capture .bar, body.capture .hint, body.capture #loading { display: none; }
 </style>
@@ -48,6 +56,14 @@
     <button data-metal="rg"><span class="sw" style="background:#eaa58a"></span>זהב אדום</button>
     <button id="bloom" class="half">ניצוץ</button>
     <button id="rot" class="on half">סיבוב</button>
+  </div>
+  <div class="ctl gems" id="gems" hidden>
+    <button data-stone="diamond"><span class="sw" style="background:#eef1f5"></span><span class="lbl">יהלום</span></button>
+    <button data-stone="sapphire"><span class="sw" style="background:#1f45c8"></span><span class="lbl">ספיר</span></button>
+    <button data-stone="emerald"><span class="sw" style="background:#0f9d58"></span><span class="lbl">אמרלד</span></button>
+    <button data-stone="ruby"><span class="sw" style="background:#c8102e"></span><span class="lbl">רובי</span></button>
+    <button data-stone="yellow"><span class="sw" style="background:#f6c400"></span><span class="lbl">צהוב</span></button>
+    <button data-stone="pink"><span class="sw" style="background:#f28bb4"></span><span class="lbl">ורוד</span></button>
   </div>
 </div>
 
@@ -307,15 +323,32 @@ ring.traverse((o) => {
   const m = F ? analyticGem(F) : bvhGem(o.geometry);
   o.material = m; diamondMats.push(m);
 });
-// coloured centre stone (config.json "gem_colors": {"largest": "#ff5c9a"}): tints the biggest stone, e.g. a pink diamond
-if (CFG.gem_colors && CFG.gem_colors.largest) {
-  let big = null, bigSize = 0;
-  ring.traverse((o) => {
-    if (!o.isMesh || !o.name.startsWith('diamond')) return;
-    const s = new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3()).length();
-    if (s > bigSize) { bigSize = s; big = o; }
-  });
-  if (big) big.material.uniforms.color.value.set(CFG.gem_colors.largest);
+// centre stone colour buttons: the biggest stone (when it is clearly bigger than the rest) can be shown as a white
+// diamond or in the finest colour of each gem: royal-blue sapphire, Colombian emerald, pigeon-blood ruby, canary yellow
+// diamond, pink diamond. Side stones stay diamonds. ?stone=<key> or config.json "center_stone" picks the start colour,
+// "gem_colors": {"largest": "#hex"} still forces a custom tint, "stone_buttons": false hides the row.
+const STONES = {
+  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#1d4cff', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
+  ruby: { color: '#c8003c', ior: 1.77 }, yellow: { color: '#ffc000', ior: 2.42 }, pink: { color: '#ff8fb8', ior: 2.42 },
+};
+const gemSizes = [];
+ring.traverse((o) => {
+  if (o.isMesh && o.name.startsWith('diamond')) gemSizes.push([new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3()).length(), o]);
+});
+gemSizes.sort((a, b) => b[0] - a[0]);
+const centre = gemSizes.length && (gemSizes.length === 1 || gemSizes[0][0] > 1.4 * gemSizes[1][0]) ? gemSizes[0][1] : null;
+function setStone(key) {
+  const st = STONES[key]; if (!centre || !st) return;
+  centre.material.uniforms.color.value.set(st.color); centre.material.uniforms.ior.value = st.ior;
+  document.querySelectorAll('[data-stone]').forEach((x) => x.classList.toggle('on', x.dataset.stone === key));
+}
+if (centre) {
+  if (CFG.stone_buttons !== false) document.getElementById('gems').hidden = false;
+  const startKey = Q.get('stone') || CFG.center_stone;
+  if (startKey) setStone(startKey);
+  else if (CFG.gem_colors && CFG.gem_colors.largest) centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
+  else setStone('diamond');
+  document.querySelectorAll('[data-stone]').forEach((b) => b.onclick = () => setStone(b.dataset.stone));
 }
 
 // fit the jewel to the free area above the controls: the narrower of the two fields of view decides
