@@ -11,7 +11,7 @@
 <meta property="og:title" content="CŒUR">
 <meta property="og:description" content="Cushion 6.80 mm · 14 × 0.15 ct · hidden halo · 18K yellow gold">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/coeur/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/coeur/preview.jpg?v=1793296882">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/coeur/preview.jpg?v=1793297702">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -111,7 +111,7 @@
   @keyframes shine { 0% { opacity: 1; background-position: 130% 0; } 100% { opacity: 1; background-position: -30% 0; } }
   .metals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 380px; margin-inline: auto; width: 100%; }
   .ingot .lbl { position: absolute; left: 8%; right: 8%; top: 12%; bottom: 14%; display: grid; place-items: center; text-align: center;
-                font-family: 'Karantina', -apple-system, Arial, sans-serif; font-size: 22px; font-weight: 300; line-height: .95;
+                font-family: 'Karantina', -apple-system, Arial, sans-serif; font-size: 22px; font-weight: 300; line-height: .92;
                 letter-spacing: .07em; pointer-events: none;
                 color: rgba(58,58,62,.62); text-shadow: 0 1px 0 rgba(255,255,255,.8), 0 -1px 0 rgba(0,0,0,.22); }
   .ingot[data-metal="yg"] .lbl { color: rgba(112,72,8,.66); text-shadow: 0 1px 0 rgba(255,246,214,.85), 0 -1px 0 rgba(80,48,0,.3); }
@@ -190,6 +190,15 @@
   .calib .card { border: 2px solid var(--ink); border-radius: 3.2mm; box-sizing: border-box; }
   .calib input { width: min(320px, 80vw); }
   .calib button { min-height: 48px; padding: 8px 28px; font-size: 16px; }
+  /* alloy choice: the karat / finish struck small under the name; alloy column = the same ingot in each alloy colour */
+  .ingot { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+  .shades .shade.alloy { width: 92px; height: 52px; border: 0; border-radius: 10px; background: none; position: relative; }
+  .shades .shade.alloy img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .shades .shade.alloy .al { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Karantina', Arial, sans-serif;
+                             font-size: 17px; font-weight: 300; letter-spacing: .06em; color: rgba(58,58,62,.7); text-shadow: 0 1px 0 rgba(255,255,255,.8); }
+  .shades .shade.alloy .al[data-m="yg"] { color: rgba(112,72,8,.72); } .shades .shade.alloy .al[data-m="rg"] { color: rgba(112,52,36,.7); }
+  .shades .shade.alloy.on { outline: 2px solid var(--ink); outline-offset: 0; background: none; }
+  .shades:has(.alloy) { border-radius: 18px; padding: 6px; gap: 4px; }
   .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   @media (prefers-reduced-motion: reduce) { .obj.pop img, .obj.pop .lbl, .obj.pop::after, .tools button.pop svg, #rot.on .spin, #bloom.on [class^=tw], .swipe .finger, .swipe .trail { animation: none; } .glint { display: none; } }
   #loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
@@ -274,7 +283,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793296882';
+const BUILD = '1793297702';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -311,6 +320,7 @@ function applyLang(L) {
   set('[data-metal="pt"] .lbl', 2); set('[data-metal="yg"] .lbl', 3); set('[data-metal="rg"] .lbl', 4);
   set('#bloom .vh', 5); set('#rot .vh', 6);
   ['diamond', 'sapphire', 'emerald', 'ruby', 'yellow', 'pink'].forEach((k, i) => set('[data-stone="' + k + '"] .lbl', 7 + i));
+  if (window.__metalLabels) window.__metalLabels();
   set('#more .lbl', document.getElementById('more').getAttribute('aria-expanded') === 'true' ? 14 : 13);
   const pick = (base, map) => (map && map[L]) || (L !== 'he' && map && map.en) || base || '';
   const title = pick(CFG.title, CFG.titles), sub = pick(CFG.subtitle, CFG.subtitles);
@@ -843,10 +853,55 @@ document.getElementById('calibBtn').onclick = () => {
   document.getElementById('calibSave').onclick = () => { try { localStorage.setItem('pxmm', rg.value); } catch {} cal.hidden = true; setReal(true); };
 };
 document.getElementById('bloom').onclick = (e) => { bloom.enabled = !bloom.enabled; e.currentTarget.classList.toggle('on', bloom.enabled); };
-document.querySelectorAll('[data-metal]').forEach((b) => b.onclick = () => {
-  metalMat.color.setHex(METALS[b.dataset.metal]);
-  document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x === b));
+// alloys per ingot (long-press, like the stone shades): real colour of each karat / finish; first = default
+const N3 = (he, fr, en) => ({ he, fr, en });
+const ALLOYS = {
+  yg: [{ k: N3('זהב 18K', 'Or 18K', 'Gold 18K'), c: 0xf1c97a, f: '' }, { k: N3('זהב 14K', 'Or 14K', 'Gold 14K'), c: 0xe9cd8e, f: 'saturate(.8) brightness(1.03)' },
+       { k: N3('זהב 12K', 'Or 12K', 'Gold 12K'), c: 0xe3cc98, f: 'saturate(.66) brightness(1.05)' }, { k: N3('זהב 9K', 'Or 9K', 'Gold 9K'), c: 0xdccba0, f: 'saturate(.52) brightness(1.06)' }],
+  pt: [{ k: N3('פלטינה', 'Platine', 'Platinum'), c: 0xdcdde0, r: 0.1, f: '' }, { k: N3('רודיום', 'Rhodium', 'Rhodium'), c: 0xf0f2f4, r: 0.05, f: 'brightness(1.08) contrast(1.06)' },
+       { k: N3('זהב לבן', 'Or blanc', 'White gold'), c: 0xe4ddcb, r: 0.1, f: 'sepia(.22) brightness(1.02)' },
+       { k: N3('פלדיום', 'Palladium', 'Palladium'), c: 0xcfd0d1, r: 0.12, f: 'brightness(.93)' }],
+  rg: [{ k: N3('זהב אדום 18K', 'Or rose 18K', 'Rose 18K'), c: 0xeaa58a, f: '' }, { k: N3('זהב אדום 14K', 'Or rose 14K', 'Rose 14K'), c: 0xe6a991, f: 'saturate(.85) brightness(1.03)' },
+       { k: N3('זהב אדום 9K', 'Or rose 9K', 'Rose 9K'), c: 0xe2b29c, f: 'saturate(.7) brightness(1.05)' }, { k: N3('זהב אדום כהה 18K', 'Or rouge 18K', 'Red 18K'), c: 0xdf8f72, f: 'saturate(1.25) hue-rotate(-6deg)' }],
+};
+const ALLOY = { yg: 0, pt: 0, rg: 0 };
+const alloyName = (v) => v.k[LANG] || v.k.en;
+function metalLabels() {   // the struck name always says the chosen alloy: זהב 18K, זהב 14K, רודיום...
+  for (const m in ALLOYS) { const l = document.querySelector(`[data-metal="${m}"] .lbl`); if (l) l.textContent = alloyName(ALLOYS[m][ALLOY[m]]); }
+}
+window.__metalLabels = metalLabels;
+function setMetal(key) {
+  const v = ALLOYS[key][ALLOY[key]];
+  metalMat.color.setHex(v.c); metalMat.roughness = v.r ?? 0.1;
+  document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === key));
+  document.querySelector(`[data-metal="${key}"] img`).style.filter = v.f || '';
+  metalLabels();
+}
+function openAlloys(btn) {
+  const key = btn.dataset.metal, pop = document.getElementById('shades'), src = btn.querySelector('img').src;
+  pop.textContent = '';
+  ALLOYS[key].forEach((v, i) => {
+    const s = document.createElement('button'); s.className = 'shade alloy' + (i === ALLOY[key] ? ' on' : '');
+    const im = new Image(); im.alt = ''; im.src = src; im.style.filter = v.f || '';
+    const l = document.createElement('span'); l.className = 'al'; l.textContent = alloyName(v); l.dataset.m = key;
+    s.append(im, l);
+    s.onclick = (e) => { e.stopPropagation(); ALLOY[key] = i; setMetal(key); closeShades(); };
+    pop.appendChild(s);
+  });
+  pop.hidden = false;
+  const r = btn.getBoundingClientRect(), pr = document.querySelector('.bar').getBoundingClientRect();
+  pop.style.left = (r.left - pr.left + r.width / 2) + 'px'; pop.style.bottom = (pr.bottom - r.top + 6) + 'px';
+  if (navigator.vibrate) navigator.vibrate(12);
+  setTimeout(() => document.addEventListener('pointerdown', closeOutside), 0);
+}
+document.querySelectorAll('[data-metal]').forEach((b) => {
+  let lp = 0, opened = false;
+  b.addEventListener('pointerdown', () => { opened = false; lp = setTimeout(() => { opened = true; openAlloys(b); }, 480); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => b.addEventListener(ev, () => clearTimeout(lp)));
+  b.addEventListener('contextmenu', (e) => e.preventDefault());
+  b.onclick = (e) => { if (opened) { e.preventDefault(); return; } setMetal(b.dataset.metal); };
 });
+metalLabels();
 
 // press: the object sinks and springs back, a light sweep crosses it (restarted on every tap)
 document.querySelectorAll('.ctl button, .tools button').forEach((b) => b.addEventListener('click', () => {
