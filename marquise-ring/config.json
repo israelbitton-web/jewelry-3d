@@ -197,5 +197,111 @@
    ]
   }
  ],
- "v": "1793286323"
+ "v": "1793291528",
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Taille européenne",
+     "48"
+    ],
+    [
+     "Diamètre intérieur",
+     "15,27 mm"
+    ],
+    [
+     "Taille américaine",
+     "≈ 4,5"
+    ],
+    [
+     "Hauteur au-dessus du doigt",
+     "9,1 mm"
+    ],
+    [
+     "Largeur de l'anneau en bas",
+     "3,3 mm"
+    ],
+    [
+     "Dimensions hors tout",
+     "26,1 × 24,5 × 19,5 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "Pierre centrale - marquise (IGI LG769608309)",
+     "22,61 × 10,70 × 6,50 mm · 9,02 ct"
+    ],
+    [
+     "4 pierres marquises",
+     "5,44 × 2,70 mm · ≈ 0,54 ct"
+    ],
+    [
+     "2 pierres marquises",
+     "4,84 × 2,40 mm · ≈ 0,19 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 2,9 mm · ≈ 0,18 ct"
+    ],
+    [
+     "3 pierres rondes",
+     "Ø 2,7 mm · ≈ 0,22 ct"
+    ],
+    [
+     "34 pierres rondes",
+     "Ø 1,3 mm · ≈ 0,28 ct"
+    ],
+    [
+     "Total",
+     "46 pierres · ≈ 10,44 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "3,88 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "3,80 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "3,98 g"
+    ],
+    [
+     "Or 14 carats",
+     "3,28 g"
+    ],
+    [
+     "Platine 950",
+     "5,18 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "2,91 g"
+    ],
+    [
+     "Volume du métal",
+     "250,3 mm³"
+    ]
+   ]
+  }
+ ],
+ "titles": {
+  "en": "Marquise Ring - Amphora Profile",
+  "fr": "Bague marquise - profil amphore"
+ },
+ "subtitles": {
+  "he": "מרקיזה 9.02 קראט · מידה 48 · זהב 18K",
+  "en": "Marquise 9.02 ct · EU 48 · 18K gold",
+  "fr": "Marquise 9,02 ct · taille 48 · or 18 carats"
+ }
 }

@@ -2,5 +2,209 @@
  "title": "עגילי חישוק לחני",
  "subtitle": "זהב צהוב 18K · 32 יהלומים לעגיל",
  "metal": "yg",
- "model": "model.glb"
+ "model": "model.glb",
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידות העגיל",
+     "39.2 × 26.0 × 3.0 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים לעגיל אחד",
+   "rows": [
+    [
+     "32 עגולות",
+     "בקוטר 2.2 מ״מ · 1.30 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "32 אבנים · 1.30 קראט בערך"
+    ],
+    [
+     "לזוג",
+     "64 אבנים · 2.60 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת לעגיל אחד (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "7.18 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "7.04 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "7.37 גרם"
+    ],
+    [
+     "זהב 14K",
+     "6.07 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "9.59 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "5.39 גרם"
+    ],
+    [
+     "לזוג - זהב צהוב 18K",
+     "14.36 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "463.4 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Earring size",
+     "39.2 × 26.0 × 3.0 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones per earring",
+   "rows": [
+    [
+     "32 round stones",
+     "Ø 2.2 mm · ≈ 1.30 ct"
+    ],
+    [
+     "Total",
+     "32 stones · ≈ 1.30 ct"
+    ],
+    [
+     "For the pair",
+     "64 stones · ≈ 2.60 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight per earring (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "7.18 g"
+    ],
+    [
+     "18K rose gold",
+     "7.04 g"
+    ],
+    [
+     "18K white gold",
+     "7.37 g"
+    ],
+    [
+     "14K gold",
+     "6.07 g"
+    ],
+    [
+     "Platinum 950",
+     "9.59 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "5.39 g"
+    ],
+    [
+     "Pair - 18K yellow gold",
+     "14.36 g"
+    ],
+    [
+     "Metal volume",
+     "463.4 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Dimensions de la boucle",
+     "39,2 × 26,0 × 3,0 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres par boucle",
+   "rows": [
+    [
+     "32 pierres rondes",
+     "Ø 2,2 mm · ≈ 1,30 ct"
+    ],
+    [
+     "Total",
+     "32 pierres · ≈ 1,30 ct"
+    ],
+    [
+     "Pour la paire",
+     "64 pierres · ≈ 2,60 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal par boucle (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "7,18 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "7,04 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "7,37 g"
+    ],
+    [
+     "Or 14 carats",
+     "6,07 g"
+    ],
+    [
+     "Platine 950",
+     "9,59 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "5,39 g"
+    ],
+    [
+     "La paire - or jaune 18 carats",
+     "14,36 g"
+    ],
+    [
+     "Volume du métal",
+     "463,4 mm³"
+    ]
+   ]
+  }
+ ],
+ "titles": {
+  "en": "Chani's Hoop Earrings",
+  "fr": "Les créoles de Chani"
+ },
+ "subtitles": {
+  "en": "18K yellow gold · 32 diamonds per earring",
+  "fr": "Or jaune 18 carats · 32 diamants par boucle"
+ },
+ "v": "1793291528"
 }

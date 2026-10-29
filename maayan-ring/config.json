@@ -5,5 +5,257 @@
  "model": "model.glb",
  "gem_colors": {
   "largest": "#ff8fb8"
- }
+ },
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידה אירופאית",
+     "52"
+    ],
+    [
+     "קוטר פנימי",
+     "16.47 מ״מ"
+    ],
+    [
+     "מידה אמריקאית",
+     "6.0 בערך"
+    ],
+    [
+     "גובה מעל האצבע",
+     "9.8 מ״מ"
+    ],
+    [
+     "רוחב הטבעת בתחתית",
+     "2.5 מ״מ"
+    ],
+    [
+     "מידות כוללות",
+     "27.0 × 22.5 × 20.7 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים",
+   "rows": [
+    [
+     "אבן מרכזית - יהלום ורוד אובל (IGI LG833611242)",
+     "15.61 × 10.47 × 6.28 מ״מ · 8.05 קראט"
+    ],
+    [
+     "14 עגולות",
+     "בקוטר 2.9 מ״מ · 1.30 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "15 אבנים · 9.35 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "8.67 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "8.50 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "8.89 גרם"
+    ],
+    [
+     "זהב 14K",
+     "7.33 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "11.58 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "6.50 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "559.3 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "EU size",
+     "52"
+    ],
+    [
+     "Inner diameter",
+     "16.47 mm"
+    ],
+    [
+     "US size",
+     "≈ 6.0"
+    ],
+    [
+     "Height above the finger",
+     "9.8 mm"
+    ],
+    [
+     "Band width at the bottom",
+     "2.5 mm"
+    ],
+    [
+     "Overall size",
+     "27.0 × 22.5 × 20.7 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones",
+   "rows": [
+    [
+     "Centre stone - pink oval diamond (IGI LG833611242)",
+     "15.61 × 10.47 × 6.28 mm · 8.05 ct"
+    ],
+    [
+     "14 round stones",
+     "Ø 2.9 mm · ≈ 1.30 ct"
+    ],
+    [
+     "Total",
+     "15 stones · ≈ 9.35 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "8.67 g"
+    ],
+    [
+     "18K rose gold",
+     "8.50 g"
+    ],
+    [
+     "18K white gold",
+     "8.89 g"
+    ],
+    [
+     "14K gold",
+     "7.33 g"
+    ],
+    [
+     "Platinum 950",
+     "11.58 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "6.50 g"
+    ],
+    [
+     "Metal volume",
+     "559.3 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Taille européenne",
+     "52"
+    ],
+    [
+     "Diamètre intérieur",
+     "16,47 mm"
+    ],
+    [
+     "Taille américaine",
+     "≈ 6,0"
+    ],
+    [
+     "Hauteur au-dessus du doigt",
+     "9,8 mm"
+    ],
+    [
+     "Largeur de l'anneau en bas",
+     "2,5 mm"
+    ],
+    [
+     "Dimensions hors tout",
+     "27,0 × 22,5 × 20,7 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "Pierre centrale - diamant rose ovale (IGI LG833611242)",
+     "15,61 × 10,47 × 6,28 mm · 8,05 ct"
+    ],
+    [
+     "14 pierres rondes",
+     "Ø 2,9 mm · ≈ 1,30 ct"
+    ],
+    [
+     "Total",
+     "15 pierres · ≈ 9,35 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "8,67 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "8,50 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "8,89 g"
+    ],
+    [
+     "Or 14 carats",
+     "7,33 g"
+    ],
+    [
+     "Platine 950",
+     "11,58 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "6,50 g"
+    ],
+    [
+     "Volume du métal",
+     "559,3 mm³"
+    ]
+   ]
+  }
+ ],
+ "titles": {
+  "en": "A Ring for Maayan",
+  "fr": "Une bague pour Maayan"
+ },
+ "subtitles": {
+  "en": "Pink oval diamond 8.05 ct · 18K yellow gold",
+  "fr": "Diamant rose ovale 8,05 ct · or jaune 18 carats"
+ },
+ "v": "1793291528"
 }

@@ -18,5 +18,261 @@
   "he": "קושן 6.80 מ״מ · 14 × 0.15 קראט · הילה נסתרת · זהב צהוב 18K",
   "zh": "枕形 6.80 毫米 · 14 × 0.15 克拉 · 隐藏光环 · 18K 黄金",
   "ja": "クッション 6.80 mm · 14 × 0.15 ct · 隠れハロー · 18K イエローゴールド"
- }
+ },
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידה אירופאית",
+     "53"
+    ],
+    [
+     "קוטר פנימי",
+     "16.87 מ״מ"
+    ],
+    [
+     "מידה אמריקאית",
+     "6.4 בערך"
+    ],
+    [
+     "גובה מעל האצבע",
+     "6.5 מ״מ"
+    ],
+    [
+     "רוחב הטבעת בתחתית",
+     "3.1 מ״מ"
+    ],
+    [
+     "מידות כוללות",
+     "25.0 × 24.0 × 8.4 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים",
+   "rows": [
+    [
+     "אבן מרכזית - קושן",
+     "6.80 × 6.77 × 5.15 מ״מ · 1.91 קראט בערך"
+    ],
+    [
+     "14 עגולות",
+     "בקוטר 3.4 מ״מ · 2.04 קראט בערך"
+    ],
+    [
+     "16 עגולות",
+     "בקוטר 1.0 מ״מ · 0.06 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "31 אבנים · 4.00 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "4.67 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "4.58 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "4.79 גרם"
+    ],
+    [
+     "זהב 14K",
+     "3.95 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "6.24 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "3.50 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "301.3 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "EU size",
+     "53"
+    ],
+    [
+     "Inner diameter",
+     "16.87 mm"
+    ],
+    [
+     "US size",
+     "≈ 6.4"
+    ],
+    [
+     "Height above the finger",
+     "6.5 mm"
+    ],
+    [
+     "Band width at the bottom",
+     "3.1 mm"
+    ],
+    [
+     "Overall size",
+     "25.0 × 24.0 × 8.4 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones",
+   "rows": [
+    [
+     "Centre stone - cushion",
+     "6.80 × 6.77 × 5.15 mm · ≈ 1.91 ct"
+    ],
+    [
+     "14 round stones",
+     "Ø 3.4 mm · ≈ 2.04 ct"
+    ],
+    [
+     "16 round stones",
+     "Ø 1.0 mm · ≈ 0.06 ct"
+    ],
+    [
+     "Total",
+     "31 stones · ≈ 4.00 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "4.67 g"
+    ],
+    [
+     "18K rose gold",
+     "4.58 g"
+    ],
+    [
+     "18K white gold",
+     "4.79 g"
+    ],
+    [
+     "14K gold",
+     "3.95 g"
+    ],
+    [
+     "Platinum 950",
+     "6.24 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "3.50 g"
+    ],
+    [
+     "Metal volume",
+     "301.3 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Taille européenne",
+     "53"
+    ],
+    [
+     "Diamètre intérieur",
+     "16,87 mm"
+    ],
+    [
+     "Taille américaine",
+     "≈ 6,4"
+    ],
+    [
+     "Hauteur au-dessus du doigt",
+     "6,5 mm"
+    ],
+    [
+     "Largeur de l'anneau en bas",
+     "3,1 mm"
+    ],
+    [
+     "Dimensions hors tout",
+     "25,0 × 24,0 × 8,4 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "Pierre centrale - coussin",
+     "6,80 × 6,77 × 5,15 mm · ≈ 1,91 ct"
+    ],
+    [
+     "14 pierres rondes",
+     "Ø 3,4 mm · ≈ 2,04 ct"
+    ],
+    [
+     "16 pierres rondes",
+     "Ø 1,0 mm · ≈ 0,06 ct"
+    ],
+    [
+     "Total",
+     "31 pierres · ≈ 4,00 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "4,67 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "4,58 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "4,79 g"
+    ],
+    [
+     "Or 14 carats",
+     "3,95 g"
+    ],
+    [
+     "Platine 950",
+     "6,24 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "3,50 g"
+    ],
+    [
+     "Volume du métal",
+     "301,3 mm³"
+    ]
+   ]
+  }
+ ],
+ "v": "1793291528"
 }

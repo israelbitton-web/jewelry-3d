@@ -70,6 +70,15 @@
   .ingot[data-metal="yg"] .lbl { color: rgba(112,72,8,.66); text-shadow: 0 1px 0 rgba(255,246,214,.85), 0 -1px 0 rgba(80,48,0,.3); }
   .ingot[data-metal="rg"] .lbl { color: rgba(112,52,36,.62); text-shadow: 0 1px 0 rgba(255,232,224,.85), 0 -1px 0 rgba(80,30,20,.28); }
   .ingot.on img { transform: translateY(-6px); filter: drop-shadow(0 13px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 3px rgba(0,0,0,.1)); }
+  /* the struck name is part of the ingot: it rises, sinks and lifts with it, frame for frame */
+  .ingot .lbl { transform: translateY(-3px); transition: transform .25s var(--press); }
+  .ingot.on .lbl { transform: translateY(-6px); }
+  .obj.pop .lbl { animation: pressT .42s var(--press); }
+  .ingot.on.pop .lbl { animation: pressOn .42s var(--press); }
+  .ingot.on.pop img { animation: pressOnI .42s var(--press); }
+  @keyframes pressT { 0% { transform: translateY(-3px) scale(1); } 35% { transform: translateY(1px) scale(.92); } 70% { transform: translateY(-5px) scale(1.04); } 100% { transform: translateY(-3px) scale(1); } }
+  @keyframes pressOn { 0% { transform: translateY(-3px) scale(1); } 35% { transform: translateY(1px) scale(.92); } 70% { transform: translateY(-8px) scale(1.04); } 100% { transform: translateY(-6px) scale(1); } }
+  @keyframes pressOnI { 0% { transform: translateY(-3px) scale(1); } 35% { transform: translateY(1px) scale(.92); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); } 70% { transform: translateY(-8px) scale(1.04); } 100% { transform: translateY(-6px) scale(1); } }
   .ingot::before, .gem::before { content: ''; position: absolute; left: 50%; bottom: -7px; width: 18px; height: 2px; margin-left: -9px;
                 border-radius: 2px; background: var(--accent); opacity: 0; transition: opacity .25s var(--press); }
   .ingot.on::before, .gem.on::before { opacity: 1; }
@@ -102,8 +111,16 @@
   .swipe .trail { animation: trail 2.2s var(--press) 3; }
   @keyframes swipe { 0%, 100% { transform: translateX(-26px) rotate(-8deg); } 50% { transform: translateX(26px) rotate(8deg); } }
   @keyframes trail { 0%, 100% { opacity: .15; } 50% { opacity: .55; } }
+  /* language: three quiet letters top-right of the stage, the chosen one in ink with the same accent bar as the ingots */
+  .langs { position: absolute; right: 10px; top: max(8px, env(safe-area-inset-top)); display: flex; gap: 2px; z-index: 3; direction: rtl; }
+  .langs button { border: 0; background: none; min-height: 40px; min-width: 38px; padding: 0 6px; border-radius: 8px; position: relative;
+                  font-size: 13px; letter-spacing: .08em; color: var(--muted); transition: color .25s var(--press); }
+  .langs button.on { color: var(--ink); background: none; font-weight: 600; }
+  .langs button::after { content: ''; position: absolute; left: 50%; bottom: 7px; width: 14px; height: 2px; margin-left: -7px; border-radius: 2px;
+                         background: var(--accent); opacity: 0; transition: opacity .25s var(--press); }
+  .langs button.on::after { opacity: 1; }
   .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  @media (prefers-reduced-motion: reduce) { .obj.pop img, .obj.pop::after, .tools button.pop svg, #rot.on .spin, #bloom.on [class^=tw], .swipe .finger, .swipe .trail { animation: none; } .glint { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .obj.pop img, .obj.pop .lbl, .obj.pop::after, .tools button.pop svg, #rot.on .spin, #bloom.on [class^=tw], .swipe .finger, .swipe .trail { animation: none; } .glint { display: none; } }
   #loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
   /* touch screens: big, thumb-friendly controls in two even rows */
   @media (pointer: coarse) {
@@ -115,7 +132,7 @@
     .ctl.metals button { grid-column: auto; padding: 0; min-height: 0; }
     .ctl.gems button { grid-column: span 1; padding: 0; min-height: 0; width: auto; height: auto; aspect-ratio: 1; }
   }
-  body.capture .bar, body.capture .swipe, body.capture .badge360, body.capture .tools, body.capture #loading { display: none; }
+  body.capture .bar, body.capture .langs, body.capture .swipe, body.capture .badge360, body.capture .tools, body.capture #loading { display: none; }
 </style>
 </head>
 <body>
@@ -126,6 +143,9 @@
     <path class="trail" d="M18 20c12-9 72-9 84 0" stroke-width="2" stroke-dasharray="2 5"/><path class="trail" d="M14 16l4 4-5 3M106 16l-4 4 5 3" stroke-width="2"/>
     <g class="finger"><path d="M56 62V32a4 4 0 0 1 8 0v16m0-6a4 4 0 0 1 8 0v6m0-3a4 4 0 0 1 8 0v8c0 9-6 13-14 13h-3c-5 0-8-2-11-6l-7-9a3.6 3.6 0 0 1 5.6-4.5L56 52" fill="var(--bg)" stroke-width="2.2"/></g>
   </svg><span class="vh">גררו באצבע כדי לסובב · צביטה לזום</span></div>
+  <div class="langs" id="langs" role="group" aria-label="Language">
+    <button data-lang="he" lang="he" aria-label="עברית">עב</button><button data-lang="fr" lang="fr" aria-label="Français">FR</button><button data-lang="en" lang="en" aria-label="English">EN</button>
+  </div>
   <div class="tools">
     <button id="bloom"><svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><path class="tw1" d="M13 3l2.3 8.2L23.5 13.5l-8.2 2.3L13 24l-2.3-8.2L2.5 13.5l8.2-2.3z"/><path class="tw2" d="M25 2l.9 2.6 2.6.9-2.6.9L25 9l-.9-2.6-2.6-.9 2.6-.9z"/><path class="tw3" d="M24.5 18.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg><span class="vh">ניצוץ</span></button>
     <button id="rot" class="on"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="spin"><path d="M26.5 12.5A11 11 0 1 0 27 18"/><path d="M27.5 6.5v6.2h-6.2"/></g></svg><span class="vh">סיבוב</span></button>
@@ -173,17 +193,53 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793286334';
+const BUILD = '1793291528';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
-document.getElementById('title').textContent = CFG.title || '';
-document.getElementById('sub').textContent = CFG.subtitle || '';
-if (CFG.title) document.title = CFG.title;
-// full details (config.json "details" in Hebrew, "details_en" for every other language), measured by details.py
-{
-  const L = document.documentElement.lang || 'he';
-  const DET = (L === 'he' || !CFG.details_en) ? CFG.details : CFG.details_en;
+// language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
+// start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
+const T = {
+  he: ['טוען…', 'גררו באצבע כדי לסובב · צביטה לזום', 'פלטינה', 'זהב', 'זהב אדום', 'ניצוץ', 'סיבוב', 'יהלום', 'ספיר', 'אמרלד', 'רובי', 'צהוב', 'ורוד', 'פרטים מלאים'],
+  fr: ['Chargement…', 'Glissez pour tourner · pincez pour zoomer', 'Platine', 'Or', 'Or rose', 'Éclat', 'Rotation', 'Diamant', 'Saphir', 'Émeraude', 'Rubis', 'Jaune', 'Rose', 'Tous les détails'],
+  en: ['Loading…', 'Drag to rotate · pinch to zoom', 'Platinum', 'Gold', 'Rose Gold', 'Sparkle', 'Rotate', 'Diamond', 'Sapphire', 'Emerald', 'Ruby', 'Yellow', 'Pink', 'Full details'],
+  es: ['Cargando…', 'Desliza para girar · pellizca para ampliar', 'Platino', 'Oro', 'Oro rosa', 'Brillo', 'Girar', 'Diamante', 'Zafiro', 'Esmeralda', 'Rubí', 'Amarillo', 'Rosa', 'Detalles completos'],
+  de: ['Wird geladen…', 'Zum Drehen ziehen · zum Zoomen zusammendrücken', 'Platin', 'Gold', 'Roségold', 'Funkeln', 'Drehen', 'Diamant', 'Saphir', 'Smaragd', 'Rubin', 'Gelb', 'Rosa', 'Alle Details'],
+  it: ['Caricamento…', 'Trascina per ruotare · pizzica per ingrandire', 'Platino', 'Oro', 'Oro rosa', 'Scintillio', 'Ruota', 'Diamante', 'Zaffiro', 'Smeraldo', 'Rubino', 'Giallo', 'Rosa', 'Tutti i dettagli'],
+  pt: ['Carregando…', 'Arraste para girar · pince para ampliar', 'Platina', 'Ouro', 'Ouro rosé', 'Brilho', 'Girar', 'Diamante', 'Safira', 'Esmeralda', 'Rubi', 'Amarelo', 'Rosa', 'Detalhes completos'],
+  ru: ['Загрузка…', 'Проведите, чтобы вращать · сведите пальцы для масштаба', 'Платина', 'Золото', 'Розовое золото', 'Блеск', 'Вращение', 'Бриллиант', 'Сапфир', 'Изумруд', 'Рубин', 'Жёлтый', 'Розовый', 'Все детали'],
+  ar: ['جارٍ التحميل…', 'اسحب للتدوير · قرّب الإصبعين للتكبير', 'بلاتين', 'ذهب', 'ذهب وردي', 'لمعان', 'تدوير', 'ألماس', 'ياقوت أزرق', 'زمرد', 'ياقوت', 'أصفر', 'وردي', 'كل التفاصيل'],
+  zh: ['加载中…', '拖动旋转 · 双指缩放', '铂金', '黄金', '玫瑰金', '闪耀', '旋转', '钻石', '蓝宝石', '祖母绿', '红宝石', '黄色', '粉色', '完整详情'],
+  ja: ['読み込み中…', 'ドラッグで回転 · ピンチで拡大', 'プラチナ', 'ゴールド', 'ローズゴールド', 'きらめき', '回転', 'ダイヤモンド', 'サファイア', 'エメラルド', 'ルビー', 'イエロー', 'ピンク', '詳細情報'],
+};
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+function pickLang() {
+  const q = Q.get('lang'), s = store.get('lang');
+  if (q && T[q]) return q;
+  if (s && T[s]) return s;
+  const d = CFG.lang || window.__DEFAULT_LANG || 'he';
+  if (d !== 'auto') return T[d] ? d : 'he';
+  const n = (navigator.language || 'en').toLowerCase().slice(0, 2);
+  return T[n] ? n : 'en';
+}
+function applyLang(L) {
+  const t = T[L];
+  document.documentElement.lang = L;
+  document.documentElement.dir = (L === 'he' || L === 'ar') ? 'rtl' : 'ltr';
+  const set = (sel, i) => { const e = document.querySelector(sel); if (e) e.textContent = t[i]; };
+  set('#loading', 0); set('#hint .vh', 1);
+  set('[data-metal="pt"] .lbl', 2); set('[data-metal="yg"] .lbl', 3); set('[data-metal="rg"] .lbl', 4);
+  set('#bloom .vh', 5); set('#rot .vh', 6);
+  ['diamond', 'sapphire', 'emerald', 'ruby', 'yellow', 'pink'].forEach((k, i) => set('[data-stone="' + k + '"] .lbl', 7 + i));
+  set('#more .lbl', 13);
+  const pick = (base, map) => (map && map[L]) || (L !== 'he' && map && map.en) || base || '';
+  const title = pick(CFG.title, CFG.titles), sub = pick(CFG.subtitle, CFG.subtitles);
+  document.getElementById('title').textContent = title;
+  document.getElementById('sub').textContent = sub;
+  if (title) document.title = title;
+  // full details measured by details.py: "details" (Hebrew), "details_fr", "details_en" (every other language)
+  const DET = L === 'he' ? CFG.details : (CFG['details_' + L] || CFG.details_en || CFG.details);
+  const body = document.getElementById('detailsBody'), more = document.getElementById('more');
+  body.textContent = '';
   if (DET && DET.length) {
-    const body = document.getElementById('detailsBody'), more = document.getElementById('more'), box = document.getElementById('details');
     for (const sec of DET) {
       const h = document.createElement('h3'); h.textContent = sec.title; body.appendChild(h);
       for (const [k, v] of sec.rows) {
@@ -193,9 +249,19 @@ if (CFG.title) document.title = CFG.title;
       }
     }
     more.hidden = false;
-    more.onclick = () => { const o = !box.classList.contains('open'); box.classList.toggle('open', o); more.setAttribute('aria-expanded', o); };
   }
+  document.querySelectorAll('[data-lang]').forEach((x) => x.classList.toggle('on', x.dataset.lang === L));
 }
+let LANG = pickLang();
+applyLang(LANG);
+{
+  const more = document.getElementById('more'), box = document.getElementById('details');
+  more.onclick = () => { const o = !box.classList.contains('open'); box.classList.toggle('open', o); more.setAttribute('aria-expanded', o); };
+}
+document.querySelectorAll('[data-lang]').forEach((b) => b.onclick = () => {
+  LANG = b.dataset.lang; store.set('lang', LANG); applyLang(LANG);
+  b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+});
 // ?mobile=1 / ?mobile=0 forces the phone / desktop render path (to compare both on one machine)
 const MOBILE = Q.has('mobile') ? Q.get('mobile') === '1' : matchMedia('(pointer: coarse)').matches;
 const view = document.getElementById('view');

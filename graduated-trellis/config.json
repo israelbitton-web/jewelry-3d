@@ -2,5 +2,365 @@
  "title": "טבעת טרליס מדורגת",
  "subtitle": "21 יהלומים מדורגים · טרליס שזור · פלטינה 950 · מידה 53",
  "metal": "pt",
- "model": "model.glb"
+ "model": "model.glb",
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידה אירופאית",
+     "53"
+    ],
+    [
+     "קוטר פנימי",
+     "16.87 מ״מ"
+    ],
+    [
+     "מידה אמריקאית",
+     "6.4 בערך"
+    ],
+    [
+     "גובה מעל האצבע",
+     "5.9 מ״מ"
+    ],
+    [
+     "רוחב הטבעת בתחתית",
+     "3.2 מ״מ"
+    ],
+    [
+     "מידות כוללות",
+     "25.8 × 25.3 × 6.2 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים",
+   "rows": [
+    [
+     "אבן עגולה",
+     "בקוטר 6.5 מ״מ · 1.04 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 6.2 מ״מ · 1.83 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 5.5 מ״מ · 1.25 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 4.5 מ״מ · 0.72 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 3.6 מ״מ · 0.36 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 2.9 מ״מ · 0.18 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 2.2 מ״מ · 0.09 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 1.8 מ״מ · 0.04 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 1.5 מ״מ · 0.02 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 1.2 מ״מ · 0.01 קראט בערך"
+    ],
+    [
+     "2 עגולות",
+     "בקוטר 1.1 מ״מ · 0.01 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "21 אבנים · 5.56 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "4.15 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "4.07 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "4.26 גרם"
+    ],
+    [
+     "זהב 14K",
+     "3.51 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "5.54 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "3.11 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "267.8 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "EU size",
+     "53"
+    ],
+    [
+     "Inner diameter",
+     "16.87 mm"
+    ],
+    [
+     "US size",
+     "≈ 6.4"
+    ],
+    [
+     "Height above the finger",
+     "5.9 mm"
+    ],
+    [
+     "Band width at the bottom",
+     "3.2 mm"
+    ],
+    [
+     "Overall size",
+     "25.8 × 25.3 × 6.2 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones",
+   "rows": [
+    [
+     "1 round stone",
+     "Ø 6.5 mm · ≈ 1.04 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 6.2 mm · ≈ 1.83 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 5.5 mm · ≈ 1.25 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 4.5 mm · ≈ 0.72 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 3.6 mm · ≈ 0.36 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 2.9 mm · ≈ 0.18 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 2.2 mm · ≈ 0.09 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 1.8 mm · ≈ 0.04 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 1.5 mm · ≈ 0.02 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 1.2 mm · ≈ 0.01 ct"
+    ],
+    [
+     "2 round stones",
+     "Ø 1.1 mm · ≈ 0.01 ct"
+    ],
+    [
+     "Total",
+     "21 stones · ≈ 5.56 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "4.15 g"
+    ],
+    [
+     "18K rose gold",
+     "4.07 g"
+    ],
+    [
+     "18K white gold",
+     "4.26 g"
+    ],
+    [
+     "14K gold",
+     "3.51 g"
+    ],
+    [
+     "Platinum 950",
+     "5.54 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "3.11 g"
+    ],
+    [
+     "Metal volume",
+     "267.8 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Taille européenne",
+     "53"
+    ],
+    [
+     "Diamètre intérieur",
+     "16,87 mm"
+    ],
+    [
+     "Taille américaine",
+     "≈ 6,4"
+    ],
+    [
+     "Hauteur au-dessus du doigt",
+     "5,9 mm"
+    ],
+    [
+     "Largeur de l'anneau en bas",
+     "3,2 mm"
+    ],
+    [
+     "Dimensions hors tout",
+     "25,8 × 25,3 × 6,2 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "1 pierre ronde",
+     "Ø 6,5 mm · ≈ 1,04 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 6,2 mm · ≈ 1,83 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 5,5 mm · ≈ 1,25 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 4,5 mm · ≈ 0,72 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 3,6 mm · ≈ 0,36 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 2,9 mm · ≈ 0,18 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 2,2 mm · ≈ 0,09 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 1,8 mm · ≈ 0,04 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 1,5 mm · ≈ 0,02 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 1,2 mm · ≈ 0,01 ct"
+    ],
+    [
+     "2 pierres rondes",
+     "Ø 1,1 mm · ≈ 0,01 ct"
+    ],
+    [
+     "Total",
+     "21 pierres · ≈ 5,56 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "4,15 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "4,07 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "4,26 g"
+    ],
+    [
+     "Or 14 carats",
+     "3,51 g"
+    ],
+    [
+     "Platine 950",
+     "5,54 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "3,11 g"
+    ],
+    [
+     "Volume du métal",
+     "267,8 mm³"
+    ]
+   ]
+  }
+ ],
+ "titles": {
+  "en": "Graduated Trellis Ring",
+  "fr": "Bague treillis dégradée"
+ },
+ "subtitles": {
+  "en": "21 graduated diamonds · woven trellis · Platinum 950 · EU 53",
+  "fr": "21 diamants dégradés · treillis tressé · platine 950 · taille 53"
+ },
+ "v": "1793291528"
 }
