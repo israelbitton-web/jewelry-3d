@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת עבור חני">
 <meta property="og:description" content="קושן 6.80 · 14 × 0.15 ct · הילה נסתרת · זהב צהוב 18K · מידה 53">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/hani-ring/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/hani-ring/preview.jpg?v=1793295401">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/hani-ring/preview.jpg?v=1793296184">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -163,6 +163,9 @@
   .toast button { min-height: 32px; padding: 4px 10px; font-size: 13px; color: var(--cue); border-color: var(--card-line); }
   .calib { position: fixed; inset: 0; z-index: 9; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center;
            gap: 12px; padding: 12px 16px; text-align: center; }
+  /* while the full details are open the stage icons step back behind the card (no pile-up on small phones) */
+  .tools, .badge360, .theme, .langs, .toast:not(.fade) { transition: opacity .25s var(--press); }
+  body.dopen .tools, body.dopen .badge360, body.dopen .theme, body.dopen .langs, body.dopen .toast, body.dopen .swipe { opacity: 0; pointer-events: none; }
   .calib[hidden], .toast[hidden] { display: none; }
   .calib input { direction: ltr; }
   .calib p { max-width: 340px; font-size: 15px; line-height: 1.5; margin: 0; }
@@ -251,7 +254,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793295401';
+const BUILD = '1793296184';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -322,7 +325,7 @@ applyLang(LANG);
   }, { passive: true });
   const more = document.getElementById('more'), box = document.getElementById('details');
   more.onclick = () => { const o = !box.classList.contains('open'); box.classList.toggle('open', o); more.setAttribute('aria-expanded', o);
-    more.querySelector('.lbl').textContent = T[LANG][o ? 14 : 13]; };
+    more.querySelector('.lbl').textContent = T[LANG][o ? 14 : 13]; document.body.classList.toggle('dopen', o); };
 }
 document.querySelectorAll('[data-lang]').forEach((b) => b.onclick = () => {
   LANG = b.dataset.lang; store.set('lang', LANG); applyLang(LANG);
@@ -610,8 +613,8 @@ ring.traverse((o) => {
 // diamond, pink diamond. Side stones stay diamonds. ?stone=<key> or config.json "center_stone" picks the start colour,
 // "gem_colors": {"largest": "#hex"} still forces a custom tint, "stone_buttons": false hides the row.
 const STONES = {
-  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#08206e', ior: 1.77 }, emerald: { color: '#00a648', ior: 1.58 },
-  ruby: { color: '#c8003c', ior: 1.77 }, yellow: { color: '#ffc000', ior: 2.42 }, pink: { color: '#ff8fb8', ior: 2.42 },
+  diamond: { color: '#ffffff', ior: 2.42 }, sapphire: { color: '#08206e', ior: 1.77 }, emerald: { color: '#075a32', ior: 1.58 },
+  ruby: { color: '#8a0a22', ior: 1.77 }, yellow: { color: '#ffd23f', ior: 2.42 }, pink: { color: '#f4bccb', ior: 2.42 },
 };
 const gemSizes = [];
 ring.traverse((o) => {
@@ -742,7 +745,7 @@ function pxPerMM() {
   if (!matchMedia('(pointer: coarse)').matches) return 96 / 25.4;
   return (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 163 : 160) / 25.4;     // CSS px per inch on phones
 }
-let realOn = false, realD = 0;
+let realOn = false, realD = 0, toastT = 0;
 function realDistance() {
   const vf = THREE.MathUtils.degToRad(camera.fov) / 2;
   return (view.clientHeight / pxPerMM()) / UNIT_MM / (2 * Math.tan(vf));
@@ -755,10 +758,18 @@ function moveTo(d) {
 }
 function setReal(on) {
   realOn = on; document.getElementById('real').classList.toggle('on', on);
-  document.getElementById('toast').hidden = !on;
+  const toast = document.getElementById('toast');
+  let cal = false; try { cal = +localStorage.getItem('pxmm') > 2; } catch {}
+  document.getElementById('calibBtn').hidden = cal;          // once calibrated, never asked again (long-press 1:1 to redo)
+  clearTimeout(toastT); toast.classList.remove('fade'); toast.hidden = !on;
+  if (on) toastT = setTimeout(() => toast.classList.add('fade'), cal ? 2200 : 4500);
   if (on) { realD = realDistance(); moveTo(realD); } else { fit(); moveTo(radius); }
 }
-document.getElementById('real').onclick = () => setReal(!realOn);
+let lpT = 0, lpDone = false;   // long-press on 1:1 = calibrate again
+const realBtn = document.getElementById('real');
+realBtn.addEventListener('pointerdown', () => { lpDone = false; lpT = setTimeout(() => { lpDone = true; document.getElementById('calibBtn').onclick(); }, 700); });
+['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => realBtn.addEventListener(ev, () => clearTimeout(lpT)));
+realBtn.onclick = () => { if (lpDone) { lpDone = false; return; } setReal(!realOn); };
 controls.addEventListener('end', () => { if (realOn && Math.abs(camera.position.length() - realD) / realD > 0.03) setReal(false); });
 document.getElementById('calibBtn').onclick = () => {
   const cal = document.getElementById('calib'), card = document.getElementById('calibCard'), rg = document.getElementById('calibRange');
