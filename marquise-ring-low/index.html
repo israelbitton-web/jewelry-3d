@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת מרקיזה - עגולה נמוכה">
 <meta property="og:description" content="מרקיזה 9.02 קראט · מידה 48 · זהב 18K">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/preview.jpg?v=1793296738">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low/preview.jpg?v=1793296882">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -47,6 +47,10 @@
            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), transparent 45%), var(--c); }
   .shades .shade, .shades .shade.on { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), transparent 45%), var(--c); color: inherit; }
   .shades .shade.on { outline: 2px solid var(--ink); outline-offset: 2px; border-color: transparent; }
+  .shades .shade.pic { width: 54px; height: 54px; border: 0; border-radius: 12px; background: none; }
+  .shades .shade.pic img { width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 4px 4px rgba(0,0,0,.18)); }
+  .shades .shade.pic.on { outline: 2px solid var(--ink); outline-offset: 0; background: none; }
+  .shades:has(.pic) { border-radius: 18px; padding: 6px; gap: 4px; }
   .gems[hidden] { display: none !important; }
   /* the jeweller's tray: metals are minted ingots with the name struck in, stones are the centre stone itself seen
      from the table; a press sinks the object and a light sweep runs across it (one curve for every motion) */
@@ -265,7 +269,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793296738';
+const BUILD = '1793296882';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -633,7 +637,7 @@ const STONES = {
   yellow: { ior: 2.42, def: 1, tones: ['#ffe596', '#ffd23f', '#ffc000', '#e8a800'] },
   pink: { ior: 2.42, def: 1, tones: ['#efcad3', '#f4bccb', '#f7a8c2', '#ff8fb8'] },
 };
-const TONE = {};
+const TONE = {}, THUMBS = {};
 for (const k in STONES) { TONE[k] = STONES[k].def; STONES[k].color = STONES[k].tones[STONES[k].def]; }
 const gemSizes = [];
 ring.traverse((o) => {
@@ -652,7 +656,9 @@ function openShades(btn) {
   st.tones.slice().reverse().forEach((c, ri) => {           // darkest on top, lightest next to the finger
     const i = st.tones.length - 1 - ri, s = document.createElement('button');
     s.className = 'shade' + (i === TONE[key] ? ' on' : ''); s.style.setProperty('--c', c); s.setAttribute('aria-label', key + ' ' + (i + 1));
-    s.onclick = (e) => { e.stopPropagation(); TONE[key] = i; setStone(key); closeShades(); };
+    if (THUMBS[key] && THUMBS[key][i]) { const im = new Image(); im.alt = ''; im.src = THUMBS[key][i]; s.appendChild(im); s.classList.add('pic'); }
+    s.onclick = (e) => { e.stopPropagation(); TONE[key] = i; setStone(key); closeShades();
+      const bi = btn.querySelector('img'); if (bi && THUMBS[key] && THUMBS[key][i]) { bi.src = THUMBS[key][i]; btn.style.setProperty('--img', `url(${THUMBS[key][i]})`); } };
     pop.appendChild(s);
   });
   pop.hidden = false;
@@ -717,8 +723,8 @@ function gemThumbs() {
     return ctx.getImageData(0, 0, D, D);
   };
   const now = document.querySelector('[data-stone].on'), nowKey = now ? now.dataset.stone : null, nowCol = U.color.value.clone(), nowIor = U.ior.value;
-  for (const key of Object.keys(STONES)) {
-    U.color.value.set(STONES[key].color); U.ior.value = STONES[key].ior;
+  for (const key of Object.keys(STONES)) for (let ti = 0; ti < STONES[key].tones.length; ti++) {
+    U.color.value.set(STONES[key].tones[ti]); U.ior.value = STONES[key].ior;
     const K = shot(0x000000), Wt = shot(0xffffff), out = ctx.createImageData(D, D);
     for (let i = 0; i < K.data.length; i += 4) {
       const al = 1 - ((Wt.data[i] - K.data[i]) + (Wt.data[i + 1] - K.data[i + 1]) + (Wt.data[i + 2] - K.data[i + 2])) / 765;
@@ -728,7 +734,8 @@ function gemThumbs() {
     }
     ctx.putImageData(out, 0, 0);
     const url = cv.toDataURL('image/png'), btn = document.querySelector(`[data-stone="${key}"]`);
-    if (btn) { const sw = btn.querySelector('.sw'); if (sw) sw.remove(); const im = new Image(); im.alt = ''; im.src = url; btn.prepend(im); btn.style.setProperty('--img', `url(${url})`); }
+    (THUMBS[key] = THUMBS[key] || [])[ti] = url;
+    if (btn && ti === TONE[key]) { const sw = btn.querySelector('.sw'); if (sw) sw.remove(); const im = new Image(); im.alt = ''; im.src = url; btn.prepend(im); btn.style.setProperty('--img', `url(${url})`); }
   }
   renderer.setScissorTest(false); renderer.setViewport(0, 0, W(), H());
   hidden.forEach((o) => { o.visible = true; });
