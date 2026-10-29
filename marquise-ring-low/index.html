@@ -308,7 +308,7 @@ const diamondMats = [];
 let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : 0.55;   // ?elev= camera height (capture stills)
 
 const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(CFG.model || 'model.glb');
+const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync((CFG.model || 'model.glb') + (CFG.v ? '?v=' + CFG.v : ''));   // v = publish stamp: phones never keep an old model
 const ring = gltf.scene;
 
 const box = new THREE.Box3().setFromObject(ring);
