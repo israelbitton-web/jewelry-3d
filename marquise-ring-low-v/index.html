@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת מרקיזה - עגולה נמוכה, שן V">
 <meta property="og:description" content="מרקיזה 9.02 קראט · שן V · מידה 48 · זהב 18K">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/preview.jpg?v=1793352840">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/marquise-ring-low-v/preview.jpg?v=1793355099">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -153,8 +153,19 @@
   #bloom.on .tw3 { animation: twinkle 1.6s ease-in-out 1s infinite; transform-origin: 24.5px 22px; }
   @keyframes twinkle { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.55); opacity: .55; } }
   /* the stage can be turned by hand: a quiet 360 mark top-left, and a finger that shows the gesture once */
-  .badge360 { position: absolute; right: 12px; bottom: 14px; color: var(--muted); pointer-events: none; z-index: 2; }
-  .badge360 svg { width: 50px; height: auto; display: block; }
+  /* 360: a quiet transparent grey mark under the languages - it only says the whole page turns */
+  .badge360 { position: absolute; right: 14px; top: calc(max(8px, env(safe-area-inset-top)) + 40px); color: var(--muted); opacity: .42;
+              pointer-events: none; z-index: 2; }
+  .badge360 svg { width: 34px; height: auto; display: block; }
+  /* view buttons (like Rhino's Top / Front / Right): the right twin of the left tool column; each icon is the ring
+     itself as that view shows it, with a small word under it */
+  .views { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 2; }
+  .views button { border: 0; background: none; padding: 0; width: 50px; min-height: 0; border-radius: 10px; color: var(--muted);
+                  display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .views button.on { color: var(--accent); background: none; }
+  .views svg { width: 30px; height: 30px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.18)); }
+  .views .cap { font-size: 10px; line-height: 1.1; letter-spacing: .02em; white-space: nowrap; }
+  .views button.pop svg { animation: tap .4s var(--press); }
   .swipe { position: absolute; left: 50%; bottom: 18%; width: 120px; margin-left: -60px; color: var(--ink); pointer-events: none; z-index: 2;
            transition: opacity .5s var(--press); }
   .swipe svg { width: 120px; height: auto; display: block; overflow: visible; }
@@ -186,8 +197,8 @@
   .calib { position: fixed; inset: 0; z-index: 9; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center;
            gap: 12px; padding: 12px 16px; text-align: center; }
   /* while the full details are open the stage icons step back behind the card (no pile-up on small phones) */
-  .tools, .badge360, .theme, .langs, .toast:not(.fade) { transition: opacity .25s var(--press); }
-  body.dopen .tools, body.dopen .badge360, body.dopen .theme, body.dopen .langs, body.dopen .toast, body.dopen .swipe { opacity: 0; pointer-events: none; }
+  .tools, .views, .badge360, .theme, .langs, .toast:not(.fade) { transition: opacity .25s var(--press); }
+  body.dopen .tools, body.dopen .views, body.dopen .badge360, body.dopen .theme, body.dopen .langs, body.dopen .toast, body.dopen .swipe { opacity: 0; pointer-events: none; }
   .calib[hidden], .toast[hidden] { display: none; }
   .calib input { direction: ltr; }
   .calib p { max-width: 340px; font-size: 15px; line-height: 1.5; margin: 0; }
@@ -213,7 +224,7 @@
     .ctl.metals button { grid-column: auto; padding: 0; min-height: 0; }
     .ctl.gems button { grid-column: span 1; padding: 0; min-height: 0; width: auto; height: auto; aspect-ratio: 1; }
   }
-  body.capture .bar, body.capture .langs, body.capture .swipe, body.capture .badge360, body.capture .theme, body.capture .tools, body.capture .toast, body.capture #loading { display: none; }
+  body.capture .bar, body.capture .langs, body.capture .swipe, body.capture .badge360, body.capture .theme, body.capture .tools, body.capture .views, body.capture .toast, body.capture #loading { display: none; }
 </style>
 </head>
 <body>
@@ -231,6 +242,11 @@
   <div class="toast" id="toast" hidden><span id="toastTxt">גודל אמיתי על המסך · 1:1</span><button id="calibBtn">לא מדויק? כיול</button></div>
   <div class="calib" id="calib" hidden><p id="calibTxt"></p><div class="card" id="calibCard"></div>
     <input type="range" id="calibRange" min="1.2" max="12" step="0.01" aria-label="1:1"><button id="calibSave">שמירה</button></div>
+  <div class="views" id="views">
+    <button data-view="top"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13h7M22 13h7M3 19h7M22 19h7"/><circle cx="16" cy="16" r="6"/><path d="M16 12.2l3.3 1.9v3.8L16 19.8l-3.3-1.9v-3.8z"/></svg><span class="cap">למעלה</span></button>
+    <button data-view="front"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="20" r="8"/><path d="M11.5 7.6h9l-4.5 4.9z"/><path d="M13.2 5.2h5.6l1.7 2.4h-9z"/></svg><span class="cap">חזית</span></button>
+    <button data-view="side"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="13.3" y="12.6" width="5.4" height="15.6" rx="2.4"/><path d="M11.5 7.6h9l-4.5 4.9z"/><path d="M13.2 5.2h5.6l1.7 2.4h-9z"/></svg><span class="cap">צד</span></button>
+  </div>
   <div class="tools">
     <button id="real"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7" width="25" height="18" rx="2.5"/><path d="M9 7v4M14 7v3M19 7v4M24 7v3"/><text x="16" y="21.5" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor" stroke="none" font-family="-apple-system, Arial, sans-serif">1:1</text></svg><span class="vh">גודל אמיתי</span></button>
     <button id="bloom"><svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><path class="tw1" d="M13 3l2.3 8.2L23.5 13.5l-8.2 2.3L13 24l-2.3-8.2L2.5 13.5l8.2-2.3z"/><path class="tw2" d="M25 2l.9 2.6 2.6.9-2.6.9L25 9l-.9-2.6-2.6-.9 2.6-.9z"/><path class="tw3" d="M24.5 18.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg><span class="vh">ניצוץ</span></button>
@@ -283,14 +299,14 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793352840';
+const BUILD = '1793355099';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
 const T = {
-  he: ['טוען…', 'גררו באצבע כדי לסובב · צביטה לזום', 'פלטינה', 'זהב', 'זהב אדום', 'ניצוץ', 'סיבוב', 'יהלום', 'ספיר', 'אמרלד', 'רובי', 'צהוב', 'ורוד', 'לחצו לפרטים מלאים', 'סגירת הפרטים', 'גודל אמיתי', 'גודל אמיתי על המסך · 1:1', 'לא מדויק? כיול', 'הניחו כרטיס אשראי על המסך והזיזו את הפס עד שהמסגרת בגודל הכרטיס בדיוק', 'שמירה', 'לחיצה ארוכה על האבן לבחירת גוון'],
-  fr: ['Chargement…', 'Glissez pour tourner · pincez pour zoomer', 'Platine', 'Or', 'Or rose', 'Éclat', 'Rotation', 'Diamant', 'Saphir', 'Émeraude', 'Rubis', 'Jaune', 'Rose', 'Touchez pour tous les détails', 'Fermer les détails', 'Taille réelle', 'Taille réelle à l’écran · 1:1', 'Pas exact ? Calibrer', 'Posez une carte bancaire sur l’écran et déplacez le curseur jusqu’à ce que le cadre ait exactement sa taille', 'Enregistrer', 'Appui long sur la pierre pour choisir la teinte'],
-  en: ['Loading…', 'Drag to rotate · pinch to zoom', 'Platinum', 'Gold', 'Rose Gold', 'Sparkle', 'Rotate', 'Diamond', 'Sapphire', 'Emerald', 'Ruby', 'Yellow', 'Pink', 'Tap for full details', 'Close details', 'Actual size', 'Actual size on screen · 1:1', 'Not exact? Calibrate', 'Place a credit card on the screen and move the slider until the frame matches the card exactly', 'Save', 'Long-press a stone to pick its shade'],
+  he: ['טוען…', 'גררו באצבע כדי לסובב · צביטה לזום', 'פלטינה', 'זהב', 'זהב אדום', 'ניצוץ', 'סיבוב', 'יהלום', 'ספיר', 'אמרלד', 'רובי', 'צהוב', 'ורוד', 'לחצו לפרטים מלאים', 'סגירת הפרטים', 'גודל אמיתי', 'גודל אמיתי על המסך · 1:1', 'לא מדויק? כיול', 'הניחו כרטיס אשראי על המסך והזיזו את הפס עד שהמסגרת בגודל הכרטיס בדיוק', 'שמירה', 'לחיצה ארוכה על האבן לבחירת גוון', 'למעלה', 'חזית', 'צד'],
+  fr: ['Chargement…', 'Glissez pour tourner · pincez pour zoomer', 'Platine', 'Or', 'Or rose', 'Éclat', 'Rotation', 'Diamant', 'Saphir', 'Émeraude', 'Rubis', 'Jaune', 'Rose', 'Touchez pour tous les détails', 'Fermer les détails', 'Taille réelle', 'Taille réelle à l’écran · 1:1', 'Pas exact ? Calibrer', 'Posez une carte bancaire sur l’écran et déplacez le curseur jusqu’à ce que le cadre ait exactement sa taille', 'Enregistrer', 'Appui long sur la pierre pour choisir la teinte', 'Dessus', 'Face', 'Profil'],
+  en: ['Loading…', 'Drag to rotate · pinch to zoom', 'Platinum', 'Gold', 'Rose Gold', 'Sparkle', 'Rotate', 'Diamond', 'Sapphire', 'Emerald', 'Ruby', 'Yellow', 'Pink', 'Tap for full details', 'Close details', 'Actual size', 'Actual size on screen · 1:1', 'Not exact? Calibrate', 'Place a credit card on the screen and move the slider until the frame matches the card exactly', 'Save', 'Long-press a stone to pick its shade', 'Top', 'Front', 'Side'],
   es: ['Cargando…', 'Desliza para girar · pellizca para ampliar', 'Platino', 'Oro', 'Oro rosa', 'Brillo', 'Girar', 'Diamante', 'Zafiro', 'Esmeralda', 'Rubí', 'Amarillo', 'Rosa', 'Toque para ver todos los detalles', 'Cerrar detalles'],
   de: ['Wird geladen…', 'Zum Drehen ziehen · zum Zoomen zusammendrücken', 'Platin', 'Gold', 'Roségold', 'Funkeln', 'Drehen', 'Diamant', 'Saphir', 'Smaragd', 'Rubin', 'Gelb', 'Rosa', 'Tippen für alle Details', 'Details schließen'],
   it: ['Caricamento…', 'Trascina per ruotare · pizzica per ingrandire', 'Platino', 'Oro', 'Oro rosa', 'Scintillio', 'Ruota', 'Diamante', 'Zaffiro', 'Smeraldo', 'Rubino', 'Giallo', 'Rosa', 'Tocca per tutti i dettagli', 'Chiudi i dettagli'],
@@ -319,6 +335,7 @@ function applyLang(L) {
   set('#loading', 0); set('#hint .vh', 1);
   set('[data-metal="pt"] .lbl', 2); set('[data-metal="yg"] .lbl', 3); set('[data-metal="rg"] .lbl', 4);
   set('#bloom .vh', 5); set('#rot .vh', 6);
+  set('[data-view="top"] .cap', 21); set('[data-view="front"] .cap', 22); set('[data-view="side"] .cap', 23);
   ['diamond', 'sapphire', 'emerald', 'ruby', 'yellow', 'pink'].forEach((k, i) => set('[data-stone="' + k + '"] .lbl', 7 + i));
   if (window.__metalLabels) window.__metalLabels();
   set('#more .lbl', document.getElementById('more').getAttribute('aria-expanded') === 'true' ? 14 : 13);
@@ -836,6 +853,31 @@ function onResize() {
 }
 new ResizeObserver(onResize).observe(view);
 document.getElementById('rot').onclick = (e) => { controls.autoRotate = !controls.autoRotate; e.currentTarget.classList.toggle('on', controls.autoRotate); };
+// one tap = the exact symmetric view, like Rhino: top (onto the stone), front (along the finger: the ring is a circle),
+// side (edge-on). The finger runs along the narrower horizontal side of the box. Tapping the same view again shows the
+// other side. The distance (zoom, 1:1) is kept; turning stops so the view stays.
+const B = box.getSize(new THREE.Vector3()), fingerX = B.x <= B.z;
+const VIEW = { top: new THREE.Vector3(0, 1, 0), front: fingerX ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 0, 1),
+               side: fingerX ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(1, 0, 0) };
+let viewAnim = 0, viewKey = null;
+function viewTo(key) {
+  const tgt = controls.target, d = camera.position.distanceTo(tgt), from = camera.position.clone().sub(tgt).normalize();
+  let to = VIEW[key].clone();
+  if (key !== 'top' && (viewKey === key ? to.dot(from) > 0 : to.dot(from) < 0)) to.negate();   // nearer side first, again = other side
+  if (key === 'top') { const sd = VIEW.side.clone(); if (sd.dot(from) < 0) sd.negate();   // a hair off the pole toward the side:
+    to.copy(sd).multiplyScalar(0.002).add(VIEW.top).normalize(); }                         // the finger lies level on screen
+  const q = new THREE.Quaternion().setFromUnitVectors(from, to), q0 = new THREE.Quaternion(), qt = new THREE.Quaternion();
+  controls.autoRotate = false; document.getElementById('rot').classList.remove('on');
+  viewKey = key; document.querySelectorAll('[data-view]').forEach((b) => b.classList.toggle('on', b.dataset.view === key));
+  const t0 = performance.now(), id = ++viewAnim;
+  const step = (now) => { if (id !== viewAnim) return;
+    const k = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - k, 3);
+    qt.slerpQuaternions(q0, q, e); camera.position.copy(from).applyQuaternion(qt).multiplyScalar(d).add(tgt);
+    camera.lookAt(tgt); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+document.querySelectorAll('[data-view]').forEach((b) => { b.onclick = () => viewTo(b.dataset.view); });
+controls.addEventListener('start', () => { viewAnim++; viewKey = null; document.querySelectorAll('[data-view]').forEach((b) => b.classList.remove('on')); });
 // 1:1 - the camera distance at which one millimetre of the jewel is one millimetre of glass on THIS screen
 const UNIT_MM = CFG.unit_mm || 1;
 function pxPerMM() {
@@ -925,7 +967,7 @@ document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, (
 metalLabels();
 
 // press: the object sinks and springs back, a light sweep crosses it (restarted on every tap)
-document.querySelectorAll('.ctl button, .tools button').forEach((b) => b.addEventListener('click', () => {
+document.querySelectorAll('.ctl button, .tools button, .views button').forEach((b) => b.addEventListener('click', () => {
   b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
   if (b.classList.contains('obj')) {     // a small four-point glint on the object
     const g = document.createElement('span'); g.className = 'glint';
