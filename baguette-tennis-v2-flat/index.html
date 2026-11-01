@@ -11,7 +11,7 @@
 <meta property="og:title" content="צמיד טניס בגט · גרסה 2">
 <meta property="og:description" content="רק יהלומים ושיניים · פרוס ישר">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/preview.jpg?v=1793549833">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/preview.jpg?v=1793550349">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -299,7 +299,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793549833';
+const BUILD = '1793550349';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -620,7 +620,7 @@ const metalKey = Q.get('metal') || CFG.metal || 'pt';
 const metalMat = new THREE.MeshStandardMaterial({ color: METALS[metalKey] || METALS.pt, metalness: 1, roughness: 0.1, envMapIntensity: 1.2 });
 document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === metalKey));
 const diamondMats = [];
-let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : 0.55;   // ?elev= camera height (capture stills)
+let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : (CFG.elev ?? 0.55);   // config "elev": start camera height   // ?elev= camera height (capture stills)
 
 const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
 const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync((CFG.model || 'model.glb') + (CFG.v ? '?v=' + CFG.v : ''));   // v = publish stamp: phones never keep an old model
@@ -653,6 +653,16 @@ ring.updateMatrixWorld(true);
 ring.traverse((o) => {
   if (!o.isMesh) return;
   if (!o.name.startsWith('diamond')) { o.material = metalMat; return; }
+  // config "gem_style": "facet" (many small step-cut stones, bracelets): a crisp faceted mirror-crystal per facet instead
+  // of tracing one merged mesh (rays wandered from stone to stone, and the cost made phones drop the resolution)
+  if (CFG.gem_style === 'facet' && !(GEM !== 'bvh' && roundFrame(o))) {
+    o.geometry = o.geometry.toNonIndexed(); o.geometry.computeVertexNormals();
+    // mirror-crystal: every flat facet reflects a different part of the studio (light / dark steps like a step cut)
+    const m = new THREE.MeshPhysicalMaterial({ color: 0xdfe6ee, metalness: 1.0, roughness: 0.02, flatShading: true,
+      envMapIntensity: 1.25, clearcoat: 1.0, clearcoatRoughness: 0.0, iridescence: 0.35, iridescenceIOR: 1.8,
+      iridescenceThicknessRange: [180, 420] });
+    m.userData.facet = true; o.material = m; diamondMats.push(m); return;
+  }
   const F = GEM === 'bvh' ? null : roundFrame(o);
   const m = F ? analyticGem(F) : bvhGem(o.geometry);
   o.material = m; diamondMats.push(m);
@@ -684,7 +694,7 @@ const thumbGem = centre || (gemSizes.length ? gemSizes[0][1] : null);
 const targets = centre ? [centre] : gemSizes.map((g) => g[1]);
 function setStone(key) {
   const st = STONES[key]; if (!thumbGem || !st) return;
-  for (const g of targets) { g.material.uniforms.color.value.set(st.tones[TONE[key]]); g.material.uniforms.ior.value = st.ior; }
+  for (const g of targets) { if (g.material.userData.facet) { g.material.color.set(st.tones[TONE[key]]); continue; } g.material.uniforms.color.value.set(st.tones[TONE[key]]); g.material.uniforms.ior.value = st.ior; }
   document.querySelectorAll('[data-stone]').forEach((x) => x.classList.toggle('on', x.dataset.stone === key));
 }
 function openShades(btn) {
@@ -814,7 +824,7 @@ if (thumbGem) {
   if (CFG.stone_buttons !== false) document.getElementById('gems').hidden = false;
   const startKey = Q.get('stone') || CFG.center_stone;
   if (startKey) setStone(startKey);
-  else if (centre && CFG.gem_colors && CFG.gem_colors.largest) { centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
+  else if (centre && CFG.gem_colors && CFG.gem_colors.largest && centre.material.uniforms) { centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
     document.querySelector('[data-stone="diamond"]').classList.add('on'); }
   else setStone('diamond');
   document.querySelectorAll('[data-stone]').forEach((b) => picker(b, openShades, () => { setStone(b.dataset.stone); shadeHint(); }));
@@ -843,7 +853,7 @@ composer.addPass(new OutputPass());
 
 // compile every shader before the first frame, so the jewel appears complete instead of stalling on first draw
 await renderer.compileAsync(scene, camera);
-if (thumbGem && !CAPTURE) gemThumbs();
+if (thumbGem && !CAPTURE && thumbGem.material.uniforms) gemThumbs();
 document.getElementById('loading').remove();
 
 function onResize() {
@@ -981,7 +991,7 @@ document.querySelectorAll('.ctl button, .tools button, .views button').forEach((
 const res = new THREE.Vector2();
 function draw() {
   renderer.getDrawingBufferSize(res);
-  for (const m of diamondMats) m.uniforms.resolution.value.copy(res);
+  for (const m of diamondMats) if (m.uniforms) m.uniforms.resolution.value.copy(res);
   // without sparkle, skip the post-processing chain: two full-screen passes fewer per frame
   if (bloom.enabled) composer.render(); else renderer.render(scene, camera);
 }
