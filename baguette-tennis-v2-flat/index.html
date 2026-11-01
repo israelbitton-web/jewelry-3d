@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>צמיד טניס בגט · גרסה 2</title>
 <!--og-->
-<meta name="description" content="רק יהלומים ושיניים · פרוס ישר">
+<meta name="description" content="מקרוב · הסוגר ו-7 חוליות">
 <meta property="og:type" content="website">
 <meta property="og:title" content="צמיד טניס בגט · גרסה 2">
-<meta property="og:description" content="רק יהלומים ושיניים · פרוס ישר">
+<meta property="og:description" content="מקרוב · הסוגר ו-7 חוליות">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/preview.jpg?v=1793550349">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-v2-flat/preview.jpg?v=1793551533">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -299,7 +299,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793550349';
+const BUILD = '1793551533';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -761,7 +761,10 @@ function gemThumbs() {
   const cam = new THREE.PerspectiveCamera(8, 1, 0.01, 1e4);
   const dist = span * 1.0 / Math.tan(THREE.MathUtils.degToRad(4));
   cam.position.copy(cen).addScaledVector(n, dist); cam.up.copy(up); cam.lookAt(cen); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
-  const U = thumbGem.material.uniforms, keep = { v: U.viewMatrixInverse.value, p: U.projectionMatrixInverse.value, bg: scene.background };
+  // facet stones (bracelets) have no shader uniforms: the same calls drive the material colour instead
+  const U = thumbGem.material.uniforms || { viewMatrixInverse: { value: null }, projectionMatrixInverse: { value: null },
+    resolution: { value: new THREE.Vector2() }, color: { value: thumbGem.material.color }, ior: { value: 2.42 } };
+  const keep = { v: U.viewMatrixInverse.value, p: U.projectionMatrixInverse.value, bg: scene.background };
   const hidden = []; scene.traverse((o) => { if ((o.isMesh || o.isSprite || o.isPoints) && o !== thumbGem && o.visible) { o.visible = false; hidden.push(o); } });   // floor, shadow, metal: only the stone is in the picture
   U.viewMatrixInverse.value = cam.matrixWorld; U.projectionMatrixInverse.value = cam.projectionMatrixInverse; U.resolution.value.set(D, D);
   const cv = document.createElement('canvas'); cv.width = cv.height = D; const ctx = cv.getContext('2d', { willReadFrequently: true });
@@ -853,7 +856,7 @@ composer.addPass(new OutputPass());
 
 // compile every shader before the first frame, so the jewel appears complete instead of stalling on first draw
 await renderer.compileAsync(scene, camera);
-if (thumbGem && !CAPTURE && thumbGem.material.uniforms) gemThumbs();
+if (thumbGem && !CAPTURE) gemThumbs();
 document.getElementById('loading').remove();
 
 function onResize() {
