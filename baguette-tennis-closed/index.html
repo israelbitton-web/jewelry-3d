@@ -11,7 +11,7 @@
 <meta property="og:title" content="צמיד טניס בגט">
 <meta property="og:description" content="3 שורות שחמט · סגור על היד">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-closed/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-closed/preview.jpg?v=1793545514">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/baguette-tennis-closed/preview.jpg?v=1793546872">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -299,7 +299,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793545514';
+const BUILD = '1793546872';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -384,7 +384,9 @@ const view = document.getElementById('view');
 
 const renderer = new THREE.WebGLRenderer({ antialias: !MOBILE, preserveDrawingBuffer: CAPTURE, powerPreference: 'high-performance' });
 // phones: start at a modest resolution; the frame-time watcher below lowers it further if the GPU struggles
-let pixelRatio = CAPTURE ? 1 : Math.min(devicePixelRatio, MOBILE ? 1.5 : 2);
+// config "min_pixel_ratio" (many-stone jewels, bracelets): the watcher never drops below it, start at least there
+const PR_MIN = Math.min(devicePixelRatio, CFG.min_pixel_ratio || 0.75);
+let pixelRatio = CAPTURE ? 1 : Math.max(PR_MIN, Math.min(devicePixelRatio, MOBILE ? (CFG.min_pixel_ratio ? 2 : 1.5) : 2));
 renderer.setPixelRatio(pixelRatio);
 const W = () => CAPTURE ? CSIZE : view.clientWidth, H = () => CAPTURE ? CSIZE : view.clientHeight;
 renderer.setSize(W(), H());
@@ -1001,8 +1003,8 @@ if (CAPTURE) {
   renderer.setAnimationLoop((now) => {
     acc += now - last; last = now; cnt++;
     if (cnt === 30) {
-      if (acc / cnt > 40 && pixelRatio > 0.75) {
-        pixelRatio = Math.max(0.75, pixelRatio - 0.25);
+      if (acc / cnt > 40 && pixelRatio > PR_MIN) {
+        pixelRatio = Math.max(PR_MIN, pixelRatio - 0.25);
         renderer.setPixelRatio(pixelRatio); composer.setPixelRatio(pixelRatio);
       }
       acc = 0; cnt = 0;
