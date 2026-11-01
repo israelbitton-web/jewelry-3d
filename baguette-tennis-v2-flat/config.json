@@ -4,7 +4,6 @@
  "metal": "wg",
  "model": "model.glb",
  "min_pixel_ratio": 1.5,
- "gem_style": "facet",
  "elev": 2.2,
  "details": [
   {
@@ -237,5 +236,5 @@
    ]
   }
  ],
- "v": "1793551533"
+ "v": "1793552130"
 }
