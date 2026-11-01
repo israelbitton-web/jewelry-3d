@@ -4,7 +4,6 @@
  "metal": "wg",
  "model": "model.glb",
  "min_pixel_ratio": 1.5,
- "gem_style": "facet",
  "details": [
   {
    "title": "מידות",
@@ -236,5 +235,5 @@
    ]
   }
  ],
- "v": "1793551524"
+ "v": "1793552123"
 }
