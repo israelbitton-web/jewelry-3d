@@ -1,0 +1,179 @@
+{
+ "title": "צמיד טניס בגט · גרסה 2",
+ "subtitle": "רק יהלומים ושיניים · פרוס ישר",
+ "metal": "wg",
+ "model": "model.glb",
+ "min_pixel_ratio": 1.5,
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידות כוללות",
+     "172.1 × 10.9 × 4.2 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים",
+   "rows": [
+    [
+     "168 מרקיזות",
+     "3.60 × 3.32 מ״מ · 18.98 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "168 אבנים · 18.98 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "22.95 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "22.51 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "23.55 גרם"
+    ],
+    [
+     "זהב 14K",
+     "19.40 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "30.65 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "17.22 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "1480.9 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Overall size",
+     "172.1 × 10.9 × 4.2 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones",
+   "rows": [
+    [
+     "168 marquise stones",
+     "3.60 × 3.32 mm · ≈ 18.98 ct"
+    ],
+    [
+     "Total",
+     "168 stones · ≈ 18.98 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "22.95 g"
+    ],
+    [
+     "18K rose gold",
+     "22.51 g"
+    ],
+    [
+     "18K white gold",
+     "23.55 g"
+    ],
+    [
+     "14K gold",
+     "19.40 g"
+    ],
+    [
+     "Platinum 950",
+     "30.65 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "17.22 g"
+    ],
+    [
+     "Metal volume",
+     "1480.9 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Dimensions hors tout",
+     "172,1 × 10,9 × 4,2 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "168 pierres marquises",
+     "3,60 × 3,32 mm · ≈ 18,98 ct"
+    ],
+    [
+     "Total",
+     "168 pierres · ≈ 18,98 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "22,95 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "22,51 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "23,55 g"
+    ],
+    [
+     "Or 14 carats",
+     "19,40 g"
+    ],
+    [
+     "Platine 950",
+     "30,65 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "17,22 g"
+    ],
+    [
+     "Volume du métal",
+     "1480,9 mm³"
+    ]
+   ]
+  }
+ ],
+ "v": "1793549833"
+}
