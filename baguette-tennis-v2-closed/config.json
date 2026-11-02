@@ -9,28 +9,12 @@
    "title": "מידות",
    "rows": [
     [
-     "מידה אירופאית",
-     "149"
+     "אורך פנימי (היקף פרק כף היד)",
+     "17 ס״מ · נשים"
     ],
     [
-     "קוטר פנימי",
-     "47.36 מ״מ"
-    ],
-    [
-     "מידה אמריקאית",
-     "44.0 בערך"
-    ],
-    [
-     "גובה מעל האצבע",
-     "8.9 מ״מ"
-    ],
-    [
-     "רוחב הטבעת בתחתית",
-     "8.5 מ״מ"
-    ],
-    [
-     "מידות כוללות",
-     "65.0 × 51.7 × 11.1 מ״מ"
+     "רוחב הצמיד",
+     "8.5 מ״מ · בסוגר עם הכפתורים בערך 11 מ״מ"
     ]
    ]
   },
@@ -38,12 +22,12 @@
    "title": "אבנים",
    "rows": [
     [
-     "186 מרקיזות",
-     "3.33 × 2.87 מ״מ · 13.37 קראט בערך"
+     "186 בגט (חיתוך מדרגות)",
+     "3.0 × 2.0 מ״מ · מידה סטנדרטית · כ-0.08 קראט כל אחת"
     ],
     [
      "סך הכל",
-     "186 אבנים · 13.37 קראט בערך"
+     "186 אבנים · כ-14.9 קראט"
     ]
    ]
   },
@@ -86,28 +70,12 @@
    "title": "Dimensions",
    "rows": [
     [
-     "EU size",
-     "149"
+     "Inner length (wrist)",
+     "17 cm · women"
     ],
     [
-     "Inner diameter",
-     "47.36 mm"
-    ],
-    [
-     "US size",
-     "≈ 44.0"
-    ],
-    [
-     "Height above the finger",
-     "8.9 mm"
-    ],
-    [
-     "Band width at the bottom",
-     "8.5 mm"
-    ],
-    [
-     "Overall size",
-     "65.0 × 51.7 × 11.1 mm"
+     "Bracelet width",
+     "8.5 mm · about 11 mm at the clasp buttons"
     ]
    ]
   },
@@ -115,12 +83,12 @@
    "title": "Stones",
    "rows": [
     [
-     "186 marquise stones",
-     "3.33 × 2.87 mm · ≈ 13.37 ct"
+     "186 baguettes (step cut)",
+     "3.0 × 2.0 mm · standard size · about 0.08 ct each"
     ],
     [
      "Total",
-     "186 stones · ≈ 13.37 ct"
+     "186 stones · about 14.9 ct"
     ]
    ]
   },
@@ -163,28 +131,12 @@
    "title": "Dimensions",
    "rows": [
     [
-     "Taille européenne",
-     "149"
+     "Longueur intérieure (poignet)",
+     "17 cm · femme"
     ],
     [
-     "Diamètre intérieur",
-     "47,36 mm"
-    ],
-    [
-     "Taille américaine",
-     "≈ 44,0"
-    ],
-    [
-     "Hauteur au-dessus du doigt",
-     "8,9 mm"
-    ],
-    [
-     "Largeur de l'anneau en bas",
-     "8,5 mm"
-    ],
-    [
-     "Dimensions hors tout",
-     "65,0 × 51,7 × 11,1 mm"
+     "Largeur du bracelet",
+     "8,5 mm · environ 11 mm aux boutons du fermoir"
     ]
    ]
   },
@@ -192,12 +144,12 @@
    "title": "Pierres",
    "rows": [
     [
-     "186 pierres marquises",
-     "3,33 × 2,87 mm · ≈ 13,37 ct"
+     "186 baguettes (taille à degrés)",
+     "3,0 × 2,0 mm · taille standard · environ 0,08 ct chacune"
     ],
     [
      "Total",
-     "186 pierres · ≈ 13,37 ct"
+     "186 pierres · environ 14,9 ct"
     ]
    ]
   },
@@ -235,5 +187,5 @@
    ]
   }
  ],
- "v": "1793633581"
+ "v": "1793633598"
 }
