@@ -11,7 +11,7 @@
 <meta property="og:title" content="CŒUR">
 <meta property="og:description" content="Cushion 6.80 mm · 14 × 0.15 ct · hidden halo · 18K yellow gold">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/coeur/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/coeur/preview.jpg?v=1793622167">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/coeur/preview.jpg?v=1793634396">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -41,6 +41,8 @@
   .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-inline-end: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
   /* centre stone colours: one row of small swatch buttons, shown only when the jewel has a clear centre stone */
   .gems { margin-top: 8px; }
+  .ctl.gems { display: flex !important; flex-wrap: nowrap; justify-content: center; gap: clamp(2px, 1.5vw, 8px); }
+  .ctl.gems .gem { flex: 1 1 0; min-width: 0; max-width: 52px; width: auto; height: auto; aspect-ratio: 1; }
   .bar { position: relative; }
   .gem { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
   /* shade column (long-press a stone, like emoji skin tones): floats above the stone, darkest on top */
@@ -254,7 +256,7 @@
   <div class="tools">
     <button id="real"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7" width="25" height="18" rx="2.5"/><path d="M9 7v4M14 7v3M19 7v4M24 7v3"/><text x="16" y="21.5" text-anchor="middle" font-size="8.5" font-weight="700" fill="currentColor" stroke="none" font-family="-apple-system, Arial, sans-serif">1:1</text></svg><span class="vh">גודל אמיתי</span></button>
     <button id="bloom"><svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><path class="tw1" d="M13 3l2.3 8.2L23.5 13.5l-8.2 2.3L13 24l-2.3-8.2L2.5 13.5l8.2-2.3z"/><path class="tw2" d="M25 2l.9 2.6 2.6.9-2.6.9L25 9l-.9-2.6-2.6-.9 2.6-.9z"/><path class="tw3" d="M24.5 18.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg><span class="vh">ניצוץ</span></button>
-    <button id="rot" class="on"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="spin"><path d="M26.5 12.5A11 11 0 1 0 27 18"/><path d="M27.5 6.5v6.2h-6.2"/></g></svg><span class="vh">סיבוב</span></button>
+    <button id="rot"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="spin"><path d="M26.5 12.5A11 11 0 1 0 27 18"/><path d="M27.5 6.5v6.2h-6.2"/></g></svg><span class="vh">סיבוב</span></button>
   </div>
 </div>
 <div class="bar">
@@ -304,7 +306,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793622167';
+const BUILD = '1793634396';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -401,7 +403,8 @@ view.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W() / H(), 0.1, 1000);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; controls.autoRotate = !CAPTURE; controls.autoRotateSpeed = 1.2; controls.enablePan = false;
+controls.enableDamping = true; controls.autoRotate = false;   // Israel: the jewel stands still until the visitor turns it on
+ controls.autoRotateSpeed = 1.2; controls.enablePan = false;
 // the finger shows the gesture three times, then leaves; touching the jewel sends it away at once
 const hideHint = () => { document.getElementById('hint').style.opacity = 0; };
 controls.addEventListener('start', hideHint); setTimeout(hideHint, 6800);
@@ -889,7 +892,8 @@ function onResize() {
   const d = radius; fit(); camera.position.multiplyScalar(radius / d);
 }
 new ResizeObserver(onResize).observe(view);
-document.getElementById('rot').onclick = (e) => { controls.autoRotate = !controls.autoRotate; e.currentTarget.classList.toggle('on', controls.autoRotate); };
+function setRot(on) { controls.autoRotate = on; document.getElementById('rot').classList.toggle('on', on); }
+document.getElementById('rot').onclick = () => { setRot(!controls.autoRotate); syncUp({ rot: controls.autoRotate }); };
 // one tap = the exact symmetric view, like Rhino: top (onto the stone), front (along the finger: the ring is a circle),
 // side (edge-on). The finger runs along the narrower horizontal side of the box. Tapping the same view again shows the
 // other side. The distance (zoom, 1:1) is kept; turning stops so the view stays.
@@ -913,7 +917,12 @@ function viewTo(key) {
     camera.lookAt(tgt); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
-document.querySelectorAll('[data-view]').forEach((b) => { b.onclick = () => viewTo(b.dataset.view); });
+document.querySelectorAll('[data-view]').forEach((b) => { b.onclick = () => { viewTo(b.dataset.view); syncUp({ view: b.dataset.view }); }; });
+// the page opens on a fixed view (config "view": top | front | side, default top), not on a turning jewel
+if (!CAPTURE) { const v0 = CFG.view || 'top'; if (VIEW[v0]) { viewTo(v0); viewAnim++; const tgt = controls.target, d = camera.position.distanceTo(tgt);
+  let to = VIEW[v0].clone(); if (v0 === 'top') { const sd = VIEW.side.clone(); to.copy(sd).multiplyScalar(0.002).add(VIEW.top).normalize(); }
+  camera.position.copy(to).multiplyScalar(d).add(tgt); camera.lookAt(tgt); controls.update(); } }
+window.__viewTo = viewTo; window.__viewKey = () => viewKey; window.__setRot = (on) => setRot(on);
 controls.addEventListener('start', () => { viewAnim++; viewKey = null; document.querySelectorAll('[data-view]').forEach((b) => b.classList.remove('on')); });
 // 1:1 - the camera distance at which one millimetre of the jewel is one millimetre of glass on THIS screen
 const UNIT_MM = CFG.unit_mm || 1;
@@ -958,7 +967,9 @@ document.getElementById('calibBtn').onclick = () => {
   rg.value = pxPerMM(); draw(); rg.oninput = draw; cal.hidden = false;
   document.getElementById('calibSave').onclick = () => { try { localStorage.setItem('pxmm', rg.value); } catch {} cal.hidden = true; setReal(true); };
 };
-document.getElementById('bloom').onclick = (e) => { bloom.enabled = !bloom.enabled; e.currentTarget.classList.toggle('on', bloom.enabled); };
+function setBloom(on) { bloom.enabled = on; document.getElementById('bloom').classList.toggle('on', on); }
+window.__setBloom = (on) => setBloom(on);
+document.getElementById('bloom').onclick = () => { setBloom(!bloom.enabled); syncUp({ bloom: bloom.enabled }); };
 // alloys per ingot (long-press, like the stone shades): real colour of each karat / finish; first = default
 const N3 = (he, fr, en) => ({ he, fr, en });
 const ALLOYS = {
@@ -1007,6 +1018,9 @@ addEventListener('message', (e) => {
   if (m.theme && m.theme !== document.documentElement.dataset.theme) applyTheme(m.theme);
   if (m.metal && ALLOYS[m.metal]) { if (m.alloy != null) ALLOY[m.metal] = m.alloy; setMetal(m.metal); }
   if (m.stone && STONES[m.stone] && thumbGem) pickTone(m.stone, m.tone ?? TONE[m.stone]);
+  if (m.view && window.__viewTo && window.__viewKey() !== m.view) window.__viewTo(m.view);
+  if (m.rot != null && window.__setRot) window.__setRot(m.rot);
+  if (m.bloom != null && window.__setBloom) window.__setBloom(m.bloom);
 });
 syncUp({ ready: true });
 
