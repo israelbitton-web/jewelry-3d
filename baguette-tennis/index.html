@@ -74,18 +74,20 @@
     const i = Math.round(rail.scrollLeft / rail.clientWidth);
     tabs.forEach((b, k) => b.classList.toggle('on', k === i));
     next.classList.toggle('off', i !== 0); prev.classList.toggle('off', i !== 1);
-    if (i !== cur) { cur = i; place(); }
+    if (i !== cur) { cur = i; place(); tellActive(); }
   };
   rail.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
   addEventListener('resize', () => { go(cur); setTimeout(place, 120); });
   addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(0); });
   setInterval(place, 400);
+  // only the screen in view draws (the other one sleeps): the phone keeps all its power for the jewel you touch
+  function tellActive() { frames.forEach((f, j) => { try { f.contentWindow.postMessage({ type: 'sc-sync', active: j === cur }, '*'); } catch {} }); }
   // one choice for both screens: metal, stone, shade, theme
   const state = {};
   addEventListener('message', (e) => {
     const m = e.data; if (!m || m.type !== 'sc-sync') return;
     const k = frames.findIndex(f => f.contentWindow === e.source); if (k < 0) return;
-    if (m.ready) { if (Object.keys(state).length) e.source.postMessage(Object.assign({ type: 'sc-sync' }, state), '*'); place(); return; }
+    if (m.ready) { if (Object.keys(state).length) e.source.postMessage(Object.assign({ type: 'sc-sync' }, state), '*'); e.source.postMessage({ type: 'sc-sync', active: k === cur }, '*'); place(); return; }
     Object.assign(state, m); delete state.type;
     if (m.theme) document.documentElement.dataset.theme = m.theme;
     frames.forEach((f, j) => { if (j !== k && f.contentWindow) f.contentWindow.postMessage(m, '*'); });

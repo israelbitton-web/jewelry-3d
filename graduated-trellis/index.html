@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת טרליס מדורגת">
 <meta property="og:description" content="21 יהלומים מדורגים · טרליס שזור · פלטינה 950 · מידה 53">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/preview.jpg?v=1793634396">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/preview.jpg?v=1793636854">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -301,7 +301,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793634396';
+const BUILD = '1793636854';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -660,6 +660,8 @@ ring.traverse((o) => {
   if (!o.isMesh) return;
   // display form (necklace bust, config / GLB node "display"): matte velvet, never metal
   if (o.name.startsWith('display')) { o.material = new THREE.MeshStandardMaterial({ color: 0x2b2927, roughness: 0.95, metalness: 0 }); return; }
+  // black lacquer in engraved letters (GLB node "lacquer"): deep glossy black enamel, never metal
+  if (o.name.startsWith('lacquer')) { o.material = new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.08, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03 }); return; }
   if (!o.name.startsWith('diamond')) { o.material = metalMat; return; }
   // config "gem_style": "facet" (many small step-cut stones, bracelets): a crisp faceted mirror-crystal per facet instead
   // of tracing one merged mesh (rays wandered from stone to stone, and the cost made phones drop the resolution)
@@ -908,7 +910,7 @@ function viewTo(key) {
   const step = (now) => { if (id !== viewAnim) return;
     const k = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - k, 3);
     qt.slerpQuaternions(q0, q, e); camera.position.copy(from).applyQuaternion(qt).multiplyScalar(d).add(tgt);
-    camera.lookAt(tgt); if (k < 1) requestAnimationFrame(step); };
+    camera.lookAt(tgt); if (window.__markDirty) window.__markDirty(2); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
 document.querySelectorAll('[data-view]').forEach((b) => { b.onclick = () => { viewTo(b.dataset.view); syncUp({ view: b.dataset.view }); }; });
@@ -1009,6 +1011,8 @@ document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, (
 metalLabels();
 addEventListener('message', (e) => {
   const m = e.data; if (!m || m.type !== 'sc-sync' || e.source !== window.parent) return;
+  if (m.active != null && window.__setActive) window.__setActive(m.active);
+  if (window.__markDirty) window.__markDirty(30);
   if (m.theme && m.theme !== document.documentElement.dataset.theme) applyTheme(m.theme);
   if (m.metal && ALLOYS[m.metal]) { if (m.alloy != null) ALLOY[m.metal] = m.alloy; setMetal(m.metal); }
   if (m.stone && STONES[m.stone] && thumbGem) pickTone(m.stone, m.tone ?? TONE[m.stone]);
@@ -1048,18 +1052,37 @@ if (CAPTURE) {
   draw();
   window.__ready = true;
 } else {
-  // frame-time watcher: a slow GPU gets a lower resolution (down to 0.75) so touches and buttons stay responsive
+  // smooth on every phone: draw only when something changes (no repaint of a still picture); while the finger drags or
+  // the jewel glides, draw at a lighter resolution and come back to full sharpness the moment it stops; a screen that is
+  // not shown (bracelet wrapper) does not draw at all. A slow GPU still lowers the sharp resolution (not below the floor).
+  let HIGH = pixelRatio, dirty = 4, active = true, moving = false, hiT = 0;
+  const LOW = Math.min(HIGH, MOBILE ? 1.0 : 1.25);
+  const B_FULL = MOBILE ? 4 : 5, B_MOVE = 2;      // inner light bounces of the diamonds: fewer only while moving
+  const setB = (n) => { for (const m of diamondMats) if (m.uniforms && m.uniforms.bounces) m.uniforms.bounces.value = n; };
+  const setPR = (p) => { if (renderer.getPixelRatio() !== p) { renderer.setPixelRatio(p); composer.setPixelRatio(p); } setB(p === HIGH ? B_FULL : B_MOVE); };
+  const sharpSoon = () => { clearTimeout(hiT); hiT = setTimeout(() => { if (!moving) { setPR(HIGH); dirty = Math.max(dirty, 2); } }, 160); };
+  controls.addEventListener('start', () => { moving = true; clearTimeout(hiT); setPR(LOW); dirty = Math.max(dirty, 2); });
+  controls.addEventListener('end', () => { moving = false; sharpSoon(); });
+  controls.addEventListener('change', () => { dirty = Math.max(dirty, 1); if (!moving && renderer.getPixelRatio() !== HIGH) sharpSoon(); });
+  window.__markDirty = (n = 30) => { dirty = Math.max(dirty, n); };
+  window.__setActive = (on) => { active = on; if (on) dirty = Math.max(dirty, 4); };
+  addEventListener('pointerdown', () => { dirty = Math.max(dirty, 40); }, true);
+  addEventListener('click', () => { dirty = Math.max(dirty, 40); }, true);
+  addEventListener('resize', () => { dirty = Math.max(dirty, 4); });
   let last = performance.now(), acc = 0, cnt = 0;
   renderer.setAnimationLoop((now) => {
+    controls.update();
+    if (!active) { last = now; return; }
+    const anim = controls.autoRotate || bloom.enabled;
+    if (!(dirty > 0 || anim)) { last = now; return; }
+    if (dirty > 0) dirty--;
+    if (anim && !moving && renderer.getPixelRatio() === HIGH) { /* turntable at full sharpness */ }
+    draw();
     acc += now - last; last = now; cnt++;
     if (cnt === 30) {
-      if (acc / cnt > 40 && pixelRatio > PR_MIN) {
-        pixelRatio = Math.max(PR_MIN, pixelRatio - 0.25);
-        renderer.setPixelRatio(pixelRatio); composer.setPixelRatio(pixelRatio);
-      }
+      if (acc / cnt > 40 && HIGH > PR_MIN && !moving) { HIGH = Math.max(PR_MIN, HIGH - 0.25); setPR(HIGH); }
       acc = 0; cnt = 0;
     }
-    controls.update(); draw();
   });
 }
 </script>
