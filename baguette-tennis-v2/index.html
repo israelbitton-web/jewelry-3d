@@ -6,35 +6,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>צמיד טניס בגט · גרסה 2</title>
 <meta property="og:title" content="צמיד טניס בגט · גרסה 2">
-<meta property="og:description" content="3 שורות שחמט · סגור על היד ופרוס ישר">
+<meta property="og:description" content="3 שורות שחמט · סגור על היד ומקרוב">
 <meta property="og:image" content="../baguette-tennis-v2-closed/preview.jpg">
 <style>
-  :root { --bg: #f4f3f0; --ink: #232326; --soft: #8a8a90; --pill: #ffffff; --line: #dcdad5; }
+  :root { --bg: #f4f3f0; --ink: #232326; --soft: #8a8a90; --line: #dcdad5; --pill: rgba(255,255,255,.82); }
+  :root[data-theme="dark"] { --bg: #2a1e17; --ink: #f1e9df; --soft: #b9a999; --line: #4a382c; --pill: rgba(42,30,23,.82); }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
     font-family: -apple-system, "Segoe UI", Arial, sans-serif; overflow: hidden; }
-  .bar { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: center; gap: 8px;
-    padding: max(10px, env(safe-area-inset-top)) 16px 10px; pointer-events: none; }
-  .tabs { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255,255,255,.82);
+  /* the screen switch sits in its own row under the theme / language buttons, so it never covers them */
+  .bar { position: fixed; top: calc(max(6px, env(safe-area-inset-top)) + 50px); left: 0; right: 0; z-index: 5;
+    display: flex; justify-content: center; pointer-events: none; transition: opacity .25s; }
+  .tabs { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--pill);
     border: 1px solid var(--line); backdrop-filter: blur(8px); pointer-events: auto; }
-  .tabs button { border: 0; background: transparent; color: var(--soft); font: inherit; font-size: 15px;
-    padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: background .25s, color .25s; }
-  .tabs button.on { background: var(--ink); color: #fff; }
+  .tabs button { border: 0; background: transparent; color: var(--soft); font: inherit; font-size: 12.5px;
+    padding: 5px 11px; border-radius: 999px; cursor: pointer; transition: background .25s, color .25s; }
+  .tabs button.on { background: var(--ink); color: var(--bg); }
   .rail { display: flex; direction: ltr; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden;
     scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
   .rail::-webkit-scrollbar { display: none; }
   .panel { flex: 0 0 100%; height: 100%; scroll-snap-align: start; position: relative; }
   .panel iframe { width: 100%; height: 100%; border: 0; display: block; }
-  .edge { position: fixed; top: 50%; transform: translateY(-50%); z-index: 6; width: 44px; height: 44px;
-    border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.88); color: var(--ink);
-    display: grid; place-items: center; cursor: pointer; transition: opacity .3s; }
-  .edge svg { width: 20px; height: 20px; }
-  .edge.r { right: 10px; } .edge.l { left: 10px; }
-  .edge[hidden] { display: grid; opacity: 0; pointer-events: none; }
-  .dots { position: fixed; bottom: max(8px, env(safe-area-inset-bottom)); left: 0; right: 0; display: flex;
-    justify-content: center; gap: 6px; z-index: 5; pointer-events: none; }
-  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background .3s, width .3s; }
-  .dots i.on { background: var(--ink); width: 18px; border-radius: 3px; }
+  /* the arrows stand right above the side button columns of the page (placed from their real position) */
+  .edge { position: fixed; z-index: 6; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+    background: var(--pill); color: var(--ink); display: grid; place-items: center; cursor: pointer;
+    transition: opacity .3s; backdrop-filter: blur(8px); visibility: hidden; }
+  .edge svg { width: 18px; height: 18px; }
+  .edge.off { opacity: 0; pointer-events: none; }
+  body.dopen .edge, body.dopen .bar { opacity: 0; pointer-events: none; }
+  body.dopen .bar .tabs { pointer-events: none; }
 </style>
 </head>
 <body>
@@ -43,29 +43,53 @@
   <button data-i="1">מקרוב</button>
 </div></div>
 <div class="rail" id="rail">
-  <section class="panel"><iframe src="../baguette-tennis-v2-closed/" title="צמיד סגור על היד" allow="fullscreen"></iframe></section>
+  <section class="panel"><iframe src="../baguette-tennis-v2-closed/" title="סגור על היד" allow="fullscreen"></iframe></section>
   <section class="panel"><iframe src="../baguette-tennis-v2-flat/" title="מקרוב" allow="fullscreen" loading="lazy"></iframe></section>
 </div>
-<button class="edge r" id="next" aria-label="למסך הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
-<button class="edge l" id="prev" aria-label="למסך הקודם" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
-<div class="dots"><i class="on"></i><i></i></div>
+<button class="edge" id="next" aria-label="למסך הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+<button class="edge off" id="prev" aria-label="למסך הקודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
 <script>
   const rail = document.getElementById('rail');
   const tabs = [...document.querySelectorAll('.tabs button')];
-  const dots = [...document.querySelectorAll('.dots i')];
+  const frames = [...document.querySelectorAll('iframe')];
   const next = document.getElementById('next'), prev = document.getElementById('prev');
+  let cur = 0;
+  try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch {}
   const go = i => rail.scrollTo({ left: i * rail.clientWidth });
   tabs.forEach(b => b.onclick = () => go(+b.dataset.i));
   next.onclick = () => go(1); prev.onclick = () => go(0);
+  // place each arrow 10 px above the button column on its side of the visible page
+  function place() {
+    let d; try { d = frames[cur].contentDocument; } catch { return; }
+    const col = d && d.querySelector(cur === 0 ? '.views' : '.tools');
+    const btn = cur === 0 ? next : prev;
+    if (!col) return;
+    const r = col.getBoundingClientRect(); if (!r.height) return;
+    btn.style.top = Math.round(r.top - 50) + 'px';
+    btn.style.left = Math.round(r.left + r.width / 2 - 20) + 'px';
+    btn.style.visibility = 'visible';
+    document.body.classList.toggle('dopen', d.body.classList.contains('dopen'));
+  }
   const mark = () => {
     const i = Math.round(rail.scrollLeft / rail.clientWidth);
     tabs.forEach((b, k) => b.classList.toggle('on', k === i));
-    dots.forEach((d, k) => d.classList.toggle('on', k === i));
-    next.hidden = i === 1; prev.hidden = i === 0;
+    next.classList.toggle('off', i !== 0); prev.classList.toggle('off', i !== 1);
+    if (i !== cur) { cur = i; place(); }
   };
   rail.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
-  addEventListener('resize', () => go(Math.round(rail.scrollLeft / rail.clientWidth)));
+  addEventListener('resize', () => { go(cur); setTimeout(place, 120); });
   addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(0); });
+  setInterval(place, 400);
+  // one choice for both screens: metal, stone, shade, theme
+  const state = {};
+  addEventListener('message', (e) => {
+    const m = e.data; if (!m || m.type !== 'sc-sync') return;
+    const k = frames.findIndex(f => f.contentWindow === e.source); if (k < 0) return;
+    if (m.ready) { if (Object.keys(state).length) e.source.postMessage(Object.assign({ type: 'sc-sync' }, state), '*'); place(); return; }
+    Object.assign(state, m); delete state.type;
+    if (m.theme) document.documentElement.dataset.theme = m.theme;
+    frames.forEach((f, j) => { if (j !== k && f.contentWindow) f.contentWindow.postMessage(m, '*'); });
+  });
 </script>
 </body>
 </html>

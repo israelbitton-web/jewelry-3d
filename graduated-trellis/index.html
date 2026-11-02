@@ -11,7 +11,7 @@
 <meta property="og:title" content="טבעת טרליס מדורגת">
 <meta property="og:description" content="21 יהלומים מדורגים · טרליס שזור · פלטינה 950 · מידה 53">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/preview.jpg?v=1793355099">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/graduated-trellis/preview.jpg?v=1793622167">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +230,7 @@
 <body>
 <div id="view">
   <div id="loading">טוען…</div>
-  <button class="theme" id="theme" aria-label="תצוגה כהה / בהירה"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+  <button class="theme" id="theme" aria-label="תצוגה כהה / בהירה"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 3.4a8.6 8.6 0 0 1 0 17.2z" fill="currentColor" stroke="none"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
   <div class="badge360" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="29" r="15" stroke-width="2.2"/><ellipse cx="32" cy="29" rx="6.5" ry="15" stroke-width="1.8"/><path d="M17 29h30" stroke-width="1.8"/><path d="M10.5 36.5C7.5 38 6 39.6 6 41.4c0 5 11.6 9.1 26 9.1s26-4.1 26-9.1c0-1.8-1.5-3.4-4.5-4.9" stroke-width="2.4"/><path d="M37.5 46.2l-4 4.3 4.5 3.5" stroke-width="2.4"/><text x="32" y="62.5" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor" stroke="none" font-family="inherit">360</text><circle cx="40.6" cy="55.6" r="1.3" stroke-width="1.1"/></svg></div>
   <div class="swipe" id="hint" aria-live="polite"><svg viewBox="0 0 120 70" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path class="trail" d="M18 20c12-9 72-9 84 0" stroke-width="2" stroke-dasharray="2 5"/><path class="trail" d="M14 16l4 4-5 3M106 16l-4 4 5 3" stroke-width="2"/>
@@ -299,7 +299,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793355099';
+const BUILD = '1793622167';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -384,7 +384,9 @@ const view = document.getElementById('view');
 
 const renderer = new THREE.WebGLRenderer({ antialias: !MOBILE, preserveDrawingBuffer: CAPTURE, powerPreference: 'high-performance' });
 // phones: start at a modest resolution; the frame-time watcher below lowers it further if the GPU struggles
-let pixelRatio = CAPTURE ? 1 : Math.min(devicePixelRatio, MOBILE ? 1.5 : 2);
+// config "min_pixel_ratio" (many-stone jewels, bracelets): the watcher never drops below it, start at least there
+const PR_MIN = Math.min(devicePixelRatio, CFG.min_pixel_ratio || 0.75);
+let pixelRatio = CAPTURE ? 1 : Math.max(PR_MIN, Math.min(devicePixelRatio, MOBILE ? (CFG.min_pixel_ratio ? 2 : 1.5) : 2));
 renderer.setPixelRatio(pixelRatio);
 const W = () => CAPTURE ? CSIZE : view.clientWidth, H = () => CAPTURE ? CSIZE : view.clientHeight;
 renderer.setSize(W(), H());
@@ -407,10 +409,13 @@ let setBackground = function () {
 }
 // the visitor's light / dark choice is remembered (default: light)
 try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch {}
+// a page shown inside a frame (bracelet wrapper with two screens) reports every choice to the parent, which passes it
+// to the other screen: metal, stone, shade and theme change together everywhere
+const syncUp = (m) => { if (window.parent !== window) window.parent.postMessage(Object.assign({ type: 'sc-sync' }, m), '*'); };
+function applyTheme(d) { document.documentElement.dataset.theme = d; try { localStorage.setItem('theme', d); } catch {} setBackground(); }
 document.getElementById('theme').onclick = (e) => {
   const d = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = d; try { localStorage.setItem('theme', d); } catch {}
-  setBackground();
+  applyTheme(d); syncUp({ theme: d });
   const b = e.currentTarget; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
 };
 setBackground();
@@ -618,7 +623,7 @@ const metalKey = Q.get('metal') || CFG.metal || 'pt';
 const metalMat = new THREE.MeshStandardMaterial({ color: METALS[metalKey] || METALS.pt, metalness: 1, roughness: 0.1, envMapIntensity: 1.2 });
 document.querySelectorAll('[data-metal]').forEach((x) => x.classList.toggle('on', x.dataset.metal === metalKey));
 const diamondMats = [];
-let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : 0.55;   // ?elev= camera height (capture stills)
+let radius = 1, elev = Q.has('elev') ? +Q.get('elev') : (CFG.elev ?? 0.55);   // config "elev": start camera height   // ?elev= camera height (capture stills)
 
 const draco = new DRACOLoader().setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
 const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync((CFG.model || 'model.glb') + (CFG.v ? '?v=' + CFG.v : ''));   // v = publish stamp: phones never keep an old model
@@ -650,7 +655,19 @@ window.__box = box.getSize(new THREE.Vector3()).toArray();
 ring.updateMatrixWorld(true);
 ring.traverse((o) => {
   if (!o.isMesh) return;
+  // display form (necklace bust, config / GLB node "display"): matte velvet, never metal
+  if (o.name.startsWith('display')) { o.material = new THREE.MeshStandardMaterial({ color: 0x2b2927, roughness: 0.95, metalness: 0 }); return; }
   if (!o.name.startsWith('diamond')) { o.material = metalMat; return; }
+  // config "gem_style": "facet" (many small step-cut stones, bracelets): a crisp faceted mirror-crystal per facet instead
+  // of tracing one merged mesh (rays wandered from stone to stone, and the cost made phones drop the resolution)
+  if (CFG.gem_style === 'facet' && !(GEM !== 'bvh' && roundFrame(o))) {
+    o.geometry = o.geometry.toNonIndexed(); o.geometry.computeVertexNormals();
+    // mirror-crystal: every flat facet reflects a different part of the studio (light / dark steps like a step cut)
+    const m = new THREE.MeshPhysicalMaterial({ color: 0xdfe6ee, metalness: 1.0, roughness: 0.02, flatShading: true,
+      envMapIntensity: 1.25, clearcoat: 1.0, clearcoatRoughness: 0.0, iridescence: 0.35, iridescenceIOR: 1.8,
+      iridescenceThicknessRange: [180, 420] });
+    m.userData.facet = true; o.material = m; diamondMats.push(m); return;
+  }
   const F = GEM === 'bvh' ? null : roundFrame(o);
   const m = F ? analyticGem(F) : bvhGem(o.geometry);
   o.material = m; diamondMats.push(m);
@@ -678,11 +695,14 @@ ring.traverse((o) => {
 gemSizes.sort((a, b) => b[0] - a[0]);
 const centre = gemSizes.length && (gemSizes.length === 1 || gemSizes[0][0] > 1.4 * gemSizes[1][0]) ? gemSizes[0][1] : null;
 // no clear centre stone (earrings, graduated bands): the buttons colour every stone of the jewel together
-const thumbGem = centre || (gemSizes.length ? gemSizes[0][1] : null);
+// without a centre the picture is the largest ordinary stone: two stones touching across a joint can come out of the
+// file as one body, larger than any real stone
+const medSize = gemSizes.length ? gemSizes[gemSizes.length >> 1][0] : 0;
+const thumbGem = centre || (gemSizes.length ? (gemSizes.find((g) => g[0] <= 1.3 * medSize) || gemSizes[0])[1] : null);
 const targets = centre ? [centre] : gemSizes.map((g) => g[1]);
 function setStone(key) {
   const st = STONES[key]; if (!thumbGem || !st) return;
-  for (const g of targets) { g.material.uniforms.color.value.set(st.tones[TONE[key]]); g.material.uniforms.ior.value = st.ior; }
+  for (const g of targets) { if (g.material.userData.facet) { g.material.color.set(st.tones[TONE[key]]); continue; } g.material.uniforms.color.value.set(st.tones[TONE[key]]); g.material.uniforms.ior.value = st.ior; }
   document.querySelectorAll('[data-stone]').forEach((x) => x.classList.toggle('on', x.dataset.stone === key));
 }
 function openShades(btn) {
@@ -692,8 +712,7 @@ function openShades(btn) {
     const i = st.tones.length - 1 - ri, s = document.createElement('button');
     s.className = 'shade' + (i === TONE[key] ? ' on' : ''); s.style.setProperty('--c', c); s.style.setProperty('--i', ri); s.setAttribute('aria-label', key + ' ' + (i + 1));
     if (THUMBS[key] && THUMBS[key][i]) { const im = new Image(); im.alt = ''; im.src = THUMBS[key][i]; s.appendChild(im); s.classList.add('pic'); }
-    s.onclick = (e) => { e.stopPropagation(); TONE[key] = i; setStone(key); closeShades();
-      const bi = btn.querySelector('img'); if (bi && THUMBS[key] && THUMBS[key][i]) { bi.src = THUMBS[key][i]; btn.style.setProperty('--img', `url(${THUMBS[key][i]})`); } };
+    s.onclick = (e) => { e.stopPropagation(); pickTone(key, i); closeShades(); syncUp({ stone: key, tone: i }); };
     pop.appendChild(s);
   });
   pop.hidden = false;
@@ -701,6 +720,11 @@ function openShades(btn) {
   pop.style.left = (r.left - pr.left + r.width / 2) + 'px'; pop.style.bottom = (pr.bottom - r.top + 6) + 'px';
   if (navigator.vibrate) navigator.vibrate(12);
   setTimeout(() => document.addEventListener('pointerdown', closeOutside), 0);
+}
+function pickTone(key, i) {
+  TONE[key] = i; setStone(key);
+  const btn = document.querySelector(`[data-stone="${key}"]`), bi = btn && btn.querySelector('img');
+  if (bi && THUMBS[key] && THUMBS[key][i]) { bi.src = THUMBS[key][i]; btn.style.setProperty('--img', `url(${THUMBS[key][i]})`); }
 }
 function closeShades() { const pp = document.getElementById('shades'); pp.classList.remove('drag'); pp.hidden = true; document.removeEventListener('pointerdown', closeOutside); }
 function closeOutside(e) { if (!e.target.closest('#shades')) closeShades(); }
@@ -728,7 +752,11 @@ function gemThumbs() {
     e1.divideScalar(ar); const key = e1.toArray().map((x) => x.toFixed(2)).join();
     const f = flats.get(key) || { area: 0, n: e1.clone(), p: a.clone() }; f.area += ar; flats.set(key, f);
   }
-  let top = null; for (const f of flats.values()) if (!top || f.area > top.area) top = f;
+  // the table = the largest flat; when pavilion steps come close (step cuts) the stone is looked at along the candidate
+  // that casts the largest shadow: only from the table does one see the whole girdle outline
+  const fl = [...flats.values()].sort((x, y) => y.area - x.area);
+  const shadow = (f) => fl.reduce((t, g) => t + g.area * Math.abs(g.n.dot(f.n)), 0);
+  const top = fl.filter((f) => f.area >= 0.3 * fl[0].area).reduce((t, f) => (shadow(f) > shadow(t) * 1.02 ? f : t), fl[0]);
   const n = top.n.clone(); if (n.dot(top.p.clone().sub(cen)) < 0) n.negate();
   const t1 = new THREE.Vector3().crossVectors(n, Math.abs(n.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0)).normalize();
   const t2 = new THREE.Vector3().crossVectors(n, t1);
@@ -749,7 +777,10 @@ function gemThumbs() {
   const cam = new THREE.PerspectiveCamera(8, 1, 0.01, 1e4);
   const dist = span * 1.0 / Math.tan(THREE.MathUtils.degToRad(4));
   cam.position.copy(cen).addScaledVector(n, dist); cam.up.copy(up); cam.lookAt(cen); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
-  const U = thumbGem.material.uniforms, keep = { v: U.viewMatrixInverse.value, p: U.projectionMatrixInverse.value, bg: scene.background };
+  // facet stones (bracelets) have no shader uniforms: the same calls drive the material colour instead
+  const U = thumbGem.material.uniforms || { viewMatrixInverse: { value: null }, projectionMatrixInverse: { value: null },
+    resolution: { value: new THREE.Vector2() }, color: { value: thumbGem.material.color }, ior: { value: 2.42 } };
+  const keep = { v: U.viewMatrixInverse.value, p: U.projectionMatrixInverse.value, bg: scene.background };
   const hidden = []; scene.traverse((o) => { if ((o.isMesh || o.isSprite || o.isPoints) && o !== thumbGem && o.visible) { o.visible = false; hidden.push(o); } });   // floor, shadow, metal: only the stone is in the picture
   U.viewMatrixInverse.value = cam.matrixWorld; U.projectionMatrixInverse.value = cam.projectionMatrixInverse; U.resolution.value.set(D, D);
   const cv = document.createElement('canvas'); cv.width = cv.height = D; const ctx = cv.getContext('2d', { willReadFrequently: true });
@@ -812,10 +843,10 @@ if (thumbGem) {
   if (CFG.stone_buttons !== false) document.getElementById('gems').hidden = false;
   const startKey = Q.get('stone') || CFG.center_stone;
   if (startKey) setStone(startKey);
-  else if (centre && CFG.gem_colors && CFG.gem_colors.largest) { centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
+  else if (centre && CFG.gem_colors && CFG.gem_colors.largest && centre.material.uniforms) { centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
     document.querySelector('[data-stone="diamond"]').classList.add('on'); }
   else setStone('diamond');
-  document.querySelectorAll('[data-stone]').forEach((b) => picker(b, openShades, () => { setStone(b.dataset.stone); shadeHint(); }));
+  document.querySelectorAll('[data-stone]').forEach((b) => picker(b, openShades, () => { setStone(b.dataset.stone); shadeHint(); syncUp({ stone: b.dataset.stone, tone: TONE[b.dataset.stone] }); }));
 }
 
 // fit the jewel to the free area above the controls: the narrower of the two fields of view decides
@@ -954,7 +985,7 @@ function openAlloys(btn) {
     const im = new Image(); im.alt = ''; im.src = src; im.style.filter = v.f || '';
     const l = document.createElement('span'); l.className = 'al'; l.textContent = alloyName(v); l.dataset.m = key;
     s.append(im, l);
-    s.onclick = (e) => { e.stopPropagation(); ALLOY[key] = i; setMetal(key); closeShades(); };
+    s.onclick = (e) => { e.stopPropagation(); ALLOY[key] = i; setMetal(key); closeShades(); syncUp({ metal: key, alloy: i }); };
     pop.appendChild(s);
   });
   pop.hidden = false;
@@ -963,8 +994,15 @@ function openAlloys(btn) {
   if (navigator.vibrate) navigator.vibrate(12);
   setTimeout(() => document.addEventListener('pointerdown', closeOutside), 0);
 }
-document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, () => setMetal(b.dataset.metal)));
+document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, () => { setMetal(b.dataset.metal); syncUp({ metal: b.dataset.metal, alloy: ALLOY[b.dataset.metal] }); }));
 metalLabels();
+addEventListener('message', (e) => {
+  const m = e.data; if (!m || m.type !== 'sc-sync' || e.source !== window.parent) return;
+  if (m.theme && m.theme !== document.documentElement.dataset.theme) applyTheme(m.theme);
+  if (m.metal && ALLOYS[m.metal]) { if (m.alloy != null) ALLOY[m.metal] = m.alloy; setMetal(m.metal); }
+  if (m.stone && STONES[m.stone] && thumbGem) pickTone(m.stone, m.tone ?? TONE[m.stone]);
+});
+syncUp({ ready: true });
 
 // press: the object sinks and springs back, a light sweep crosses it (restarted on every tap)
 document.querySelectorAll('.ctl button, .tools button, .views button').forEach((b) => b.addEventListener('click', () => {
@@ -979,7 +1017,7 @@ document.querySelectorAll('.ctl button, .tools button, .views button').forEach((
 const res = new THREE.Vector2();
 function draw() {
   renderer.getDrawingBufferSize(res);
-  for (const m of diamondMats) m.uniforms.resolution.value.copy(res);
+  for (const m of diamondMats) if (m.uniforms) m.uniforms.resolution.value.copy(res);
   // without sparkle, skip the post-processing chain: two full-screen passes fewer per frame
   if (bloom.enabled) composer.render(); else renderer.render(scene, camera);
 }
@@ -1001,8 +1039,8 @@ if (CAPTURE) {
   renderer.setAnimationLoop((now) => {
     acc += now - last; last = now; cnt++;
     if (cnt === 30) {
-      if (acc / cnt > 40 && pixelRatio > 0.75) {
-        pixelRatio = Math.max(0.75, pixelRatio - 0.25);
+      if (acc / cnt > 40 && pixelRatio > PR_MIN) {
+        pixelRatio = Math.max(PR_MIN, pixelRatio - 0.25);
         renderer.setPixelRatio(pixelRatio); composer.setPixelRatio(pixelRatio);
       }
       acc = 0; cnt = 0;

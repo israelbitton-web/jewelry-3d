@@ -230,7 +230,7 @@
 <body>
 <div id="view">
   <div id="loading">טוען…</div>
-  <button class="theme" id="theme" aria-label="תצוגה כהה / בהירה"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+  <button class="theme" id="theme" aria-label="תצוגה כהה / בהירה"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 3.4a8.6 8.6 0 0 1 0 17.2z" fill="currentColor" stroke="none"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
   <div class="badge360" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="29" r="15" stroke-width="2.2"/><ellipse cx="32" cy="29" rx="6.5" ry="15" stroke-width="1.8"/><path d="M17 29h30" stroke-width="1.8"/><path d="M10.5 36.5C7.5 38 6 39.6 6 41.4c0 5 11.6 9.1 26 9.1s26-4.1 26-9.1c0-1.8-1.5-3.4-4.5-4.9" stroke-width="2.4"/><path d="M37.5 46.2l-4 4.3 4.5 3.5" stroke-width="2.4"/><text x="32" y="62.5" text-anchor="middle" font-size="9" font-weight="800" fill="currentColor" stroke="none" font-family="inherit">360</text><circle cx="40.6" cy="55.6" r="1.3" stroke-width="1.1"/></svg></div>
   <div class="swipe" id="hint" aria-live="polite"><svg viewBox="0 0 120 70" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path class="trail" d="M18 20c12-9 72-9 84 0" stroke-width="2" stroke-dasharray="2 5"/><path class="trail" d="M14 16l4 4-5 3M106 16l-4 4 5 3" stroke-width="2"/>
@@ -299,7 +299,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793554541';
+const BUILD = '1793622161';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -409,10 +409,13 @@ let setBackground = function () {
 }
 // the visitor's light / dark choice is remembered (default: light)
 try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch {}
+// a page shown inside a frame (bracelet wrapper with two screens) reports every choice to the parent, which passes it
+// to the other screen: metal, stone, shade and theme change together everywhere
+const syncUp = (m) => { if (window.parent !== window) window.parent.postMessage(Object.assign({ type: 'sc-sync' }, m), '*'); };
+function applyTheme(d) { document.documentElement.dataset.theme = d; try { localStorage.setItem('theme', d); } catch {} setBackground(); }
 document.getElementById('theme').onclick = (e) => {
   const d = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = d; try { localStorage.setItem('theme', d); } catch {}
-  setBackground();
+  applyTheme(d); syncUp({ theme: d });
   const b = e.currentTarget; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
 };
 setBackground();
@@ -692,7 +695,10 @@ ring.traverse((o) => {
 gemSizes.sort((a, b) => b[0] - a[0]);
 const centre = gemSizes.length && (gemSizes.length === 1 || gemSizes[0][0] > 1.4 * gemSizes[1][0]) ? gemSizes[0][1] : null;
 // no clear centre stone (earrings, graduated bands): the buttons colour every stone of the jewel together
-const thumbGem = centre || (gemSizes.length ? gemSizes[0][1] : null);
+// without a centre the picture is the largest ordinary stone: two stones touching across a joint can come out of the
+// file as one body, larger than any real stone
+const medSize = gemSizes.length ? gemSizes[gemSizes.length >> 1][0] : 0;
+const thumbGem = centre || (gemSizes.length ? (gemSizes.find((g) => g[0] <= 1.3 * medSize) || gemSizes[0])[1] : null);
 const targets = centre ? [centre] : gemSizes.map((g) => g[1]);
 function setStone(key) {
   const st = STONES[key]; if (!thumbGem || !st) return;
@@ -706,8 +712,7 @@ function openShades(btn) {
     const i = st.tones.length - 1 - ri, s = document.createElement('button');
     s.className = 'shade' + (i === TONE[key] ? ' on' : ''); s.style.setProperty('--c', c); s.style.setProperty('--i', ri); s.setAttribute('aria-label', key + ' ' + (i + 1));
     if (THUMBS[key] && THUMBS[key][i]) { const im = new Image(); im.alt = ''; im.src = THUMBS[key][i]; s.appendChild(im); s.classList.add('pic'); }
-    s.onclick = (e) => { e.stopPropagation(); TONE[key] = i; setStone(key); closeShades();
-      const bi = btn.querySelector('img'); if (bi && THUMBS[key] && THUMBS[key][i]) { bi.src = THUMBS[key][i]; btn.style.setProperty('--img', `url(${THUMBS[key][i]})`); } };
+    s.onclick = (e) => { e.stopPropagation(); pickTone(key, i); closeShades(); syncUp({ stone: key, tone: i }); };
     pop.appendChild(s);
   });
   pop.hidden = false;
@@ -715,6 +720,11 @@ function openShades(btn) {
   pop.style.left = (r.left - pr.left + r.width / 2) + 'px'; pop.style.bottom = (pr.bottom - r.top + 6) + 'px';
   if (navigator.vibrate) navigator.vibrate(12);
   setTimeout(() => document.addEventListener('pointerdown', closeOutside), 0);
+}
+function pickTone(key, i) {
+  TONE[key] = i; setStone(key);
+  const btn = document.querySelector(`[data-stone="${key}"]`), bi = btn && btn.querySelector('img');
+  if (bi && THUMBS[key] && THUMBS[key][i]) { bi.src = THUMBS[key][i]; btn.style.setProperty('--img', `url(${THUMBS[key][i]})`); }
 }
 function closeShades() { const pp = document.getElementById('shades'); pp.classList.remove('drag'); pp.hidden = true; document.removeEventListener('pointerdown', closeOutside); }
 function closeOutside(e) { if (!e.target.closest('#shades')) closeShades(); }
@@ -742,7 +752,11 @@ function gemThumbs() {
     e1.divideScalar(ar); const key = e1.toArray().map((x) => x.toFixed(2)).join();
     const f = flats.get(key) || { area: 0, n: e1.clone(), p: a.clone() }; f.area += ar; flats.set(key, f);
   }
-  let top = null; for (const f of flats.values()) if (!top || f.area > top.area) top = f;
+  // the table = the largest flat; when pavilion steps come close (step cuts) the stone is looked at along the candidate
+  // that casts the largest shadow: only from the table does one see the whole girdle outline
+  const fl = [...flats.values()].sort((x, y) => y.area - x.area);
+  const shadow = (f) => fl.reduce((t, g) => t + g.area * Math.abs(g.n.dot(f.n)), 0);
+  const top = fl.filter((f) => f.area >= 0.3 * fl[0].area).reduce((t, f) => (shadow(f) > shadow(t) * 1.02 ? f : t), fl[0]);
   const n = top.n.clone(); if (n.dot(top.p.clone().sub(cen)) < 0) n.negate();
   const t1 = new THREE.Vector3().crossVectors(n, Math.abs(n.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0)).normalize();
   const t2 = new THREE.Vector3().crossVectors(n, t1);
@@ -832,7 +846,7 @@ if (thumbGem) {
   else if (centre && CFG.gem_colors && CFG.gem_colors.largest && centre.material.uniforms) { centre.material.uniforms.color.value.set(CFG.gem_colors.largest);
     document.querySelector('[data-stone="diamond"]').classList.add('on'); }
   else setStone('diamond');
-  document.querySelectorAll('[data-stone]').forEach((b) => picker(b, openShades, () => { setStone(b.dataset.stone); shadeHint(); }));
+  document.querySelectorAll('[data-stone]').forEach((b) => picker(b, openShades, () => { setStone(b.dataset.stone); shadeHint(); syncUp({ stone: b.dataset.stone, tone: TONE[b.dataset.stone] }); }));
 }
 
 // fit the jewel to the free area above the controls: the narrower of the two fields of view decides
@@ -971,7 +985,7 @@ function openAlloys(btn) {
     const im = new Image(); im.alt = ''; im.src = src; im.style.filter = v.f || '';
     const l = document.createElement('span'); l.className = 'al'; l.textContent = alloyName(v); l.dataset.m = key;
     s.append(im, l);
-    s.onclick = (e) => { e.stopPropagation(); ALLOY[key] = i; setMetal(key); closeShades(); };
+    s.onclick = (e) => { e.stopPropagation(); ALLOY[key] = i; setMetal(key); closeShades(); syncUp({ metal: key, alloy: i }); };
     pop.appendChild(s);
   });
   pop.hidden = false;
@@ -980,8 +994,15 @@ function openAlloys(btn) {
   if (navigator.vibrate) navigator.vibrate(12);
   setTimeout(() => document.addEventListener('pointerdown', closeOutside), 0);
 }
-document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, () => setMetal(b.dataset.metal)));
+document.querySelectorAll('[data-metal]').forEach((b) => picker(b, openAlloys, () => { setMetal(b.dataset.metal); syncUp({ metal: b.dataset.metal, alloy: ALLOY[b.dataset.metal] }); }));
 metalLabels();
+addEventListener('message', (e) => {
+  const m = e.data; if (!m || m.type !== 'sc-sync' || e.source !== window.parent) return;
+  if (m.theme && m.theme !== document.documentElement.dataset.theme) applyTheme(m.theme);
+  if (m.metal && ALLOYS[m.metal]) { if (m.alloy != null) ALLOY[m.metal] = m.alloy; setMetal(m.metal); }
+  if (m.stone && STONES[m.stone] && thumbGem) pickTone(m.stone, m.tone ?? TONE[m.stone]);
+});
+syncUp({ ready: true });
 
 // press: the object sinks and springs back, a light sweep crosses it (restarted on every tap)
 document.querySelectorAll('.ctl button, .tools button, .views button').forEach((b) => b.addEventListener('click', () => {

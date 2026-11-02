@@ -10,28 +10,12 @@
    "title": "מידות",
    "rows": [
     [
-     "מידה אירופאית",
-     "148"
+     "אורך פנימי (היקף פרק כף היד)",
+     "17 ס״מ · נשים"
     ],
     [
-     "קוטר פנימי",
-     "47.21 מ״מ"
-    ],
-    [
-     "מידה אמריקאית",
-     "43.8 בערך"
-    ],
-    [
-     "גובה מעל האצבע",
-     "9.7 מ״מ"
-    ],
-    [
-     "רוחב הטבעת בתחתית",
+     "רוחב הצמיד",
      "10.9 מ״מ"
-    ],
-    [
-     "מידות כוללות",
-     "66.6 × 53.4 × 10.9 מ״מ"
     ]
    ]
   },
@@ -39,12 +23,12 @@
    "title": "אבנים",
    "rows": [
     [
-     "30 מרקיזות",
-     "3.60 × 3.32 מ״מ · 3.39 קראט בערך"
+     "30 בגט (חיתוך מדרגות)",
+     "3.15 × 2.42 מ״מ · 0.10 קראט כל אחת"
     ],
     [
      "סך הכל",
-     "30 אבנים · 3.39 קראט בערך"
+     "30 אבנים · 3.0 קראט בערך"
     ]
    ]
   },
@@ -87,28 +71,12 @@
    "title": "Dimensions",
    "rows": [
     [
-     "EU size",
-     "148"
+     "Inner length (wrist)",
+     "17 cm · women"
     ],
     [
-     "Inner diameter",
-     "47.21 mm"
-    ],
-    [
-     "US size",
-     "≈ 43.8"
-    ],
-    [
-     "Height above the finger",
-     "9.7 mm"
-    ],
-    [
-     "Band width at the bottom",
+     "Bracelet width",
      "10.9 mm"
-    ],
-    [
-     "Overall size",
-     "66.6 × 53.4 × 10.9 mm"
     ]
    ]
   },
@@ -116,12 +84,12 @@
    "title": "Stones",
    "rows": [
     [
-     "30 marquise stones",
-     "3.60 × 3.32 mm · ≈ 3.39 ct"
+     "30 baguettes (step cut)",
+     "3.15 × 2.42 mm · 0.10 ct each"
     ],
     [
      "Total",
-     "30 stones · ≈ 3.39 ct"
+     "30 stones · about 3.0 ct"
     ]
    ]
   },
@@ -164,28 +132,12 @@
    "title": "Dimensions",
    "rows": [
     [
-     "Taille européenne",
-     "148"
+     "Longueur intérieure (poignet)",
+     "17 cm · femme"
     ],
     [
-     "Diamètre intérieur",
-     "47,21 mm"
-    ],
-    [
-     "Taille américaine",
-     "≈ 43,8"
-    ],
-    [
-     "Hauteur au-dessus du doigt",
-     "9,7 mm"
-    ],
-    [
-     "Largeur de l'anneau en bas",
+     "Largeur du bracelet",
      "10,9 mm"
-    ],
-    [
-     "Dimensions hors tout",
-     "66,6 × 53,4 × 10,9 mm"
     ]
    ]
   },
@@ -193,12 +145,12 @@
    "title": "Pierres",
    "rows": [
     [
-     "30 pierres marquises",
-     "3,60 × 3,32 mm · ≈ 3,39 ct"
+     "30 baguettes (taille à degrés)",
+     "3,15 × 2,42 mm · 0,10 ct chacune"
     ],
     [
      "Total",
-     "30 pierres · ≈ 3,39 ct"
+     "30 pierres · environ 3,0 ct"
     ]
    ]
   },
@@ -236,5 +188,5 @@
    ]
   }
  ],
- "v": "1793553646"
+ "v": "1793621873"
 }

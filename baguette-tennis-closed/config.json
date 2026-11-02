@@ -9,27 +9,15 @@
    "title": "מידות",
    "rows": [
     [
-     "מידה אירופאית",
-     "152"
+     "אורך פנימי (היקף פרק כף היד)",
+     "17 ס״מ · נשים"
     ],
     [
-     "קוטר פנימי",
-     "48.28 מ״מ"
-    ],
-    [
-     "מידה אמריקאית",
-     "45.1 בערך"
-    ],
-    [
-     "גובה מעל האצבע",
-     "9.6 מ״מ"
-    ],
-    [
-     "רוחב הטבעת בתחתית",
+     "רוחב הצמיד",
      "10.4 מ״מ"
     ],
     [
-     "מידות כוללות",
+     "מידות כשהוא סגור",
      "67.5 × 54.0 × 11.1 מ״מ"
     ]
    ]
@@ -38,12 +26,12 @@
    "title": "אבנים",
    "rows": [
     [
-     "144 מרקיזות",
-     "3.60 × 3.32 מ״מ · 16.31 קראט בערך"
+     "144 בגט (חיתוך מדרגות)",
+     "3.15 × 2.42 מ״מ · 0.10 קראט כל אחת"
     ],
     [
      "סך הכל",
-     "144 אבנים · 16.31 קראט בערך"
+     "144 אבנים · 14.4 קראט בערך"
     ]
    ]
   },
@@ -86,27 +74,15 @@
    "title": "Dimensions",
    "rows": [
     [
-     "EU size",
-     "152"
+     "Inner length (wrist)",
+     "17 cm · women"
     ],
     [
-     "Inner diameter",
-     "48.28 mm"
-    ],
-    [
-     "US size",
-     "≈ 45.1"
-    ],
-    [
-     "Height above the finger",
-     "9.6 mm"
-    ],
-    [
-     "Band width at the bottom",
+     "Bracelet width",
      "10.4 mm"
     ],
     [
-     "Overall size",
+     "Size when closed",
      "67.5 × 54.0 × 11.1 mm"
     ]
    ]
@@ -115,12 +91,12 @@
    "title": "Stones",
    "rows": [
     [
-     "144 marquise stones",
-     "3.60 × 3.32 mm · ≈ 16.31 ct"
+     "144 baguettes (step cut)",
+     "3.15 × 2.42 mm · 0.10 ct each"
     ],
     [
      "Total",
-     "144 stones · ≈ 16.31 ct"
+     "144 stones · about 14.4 ct"
     ]
    ]
   },
@@ -163,27 +139,15 @@
    "title": "Dimensions",
    "rows": [
     [
-     "Taille européenne",
-     "152"
+     "Longueur intérieure (poignet)",
+     "17 cm · femme"
     ],
     [
-     "Diamètre intérieur",
-     "48,28 mm"
-    ],
-    [
-     "Taille américaine",
-     "≈ 45,1"
-    ],
-    [
-     "Hauteur au-dessus du doigt",
-     "9,6 mm"
-    ],
-    [
-     "Largeur de l'anneau en bas",
+     "Largeur du bracelet",
      "10,4 mm"
     ],
     [
-     "Dimensions hors tout",
+     "Dimensions fermé",
      "67,5 × 54,0 × 11,1 mm"
     ]
    ]
@@ -192,12 +156,12 @@
    "title": "Pierres",
    "rows": [
     [
-     "144 pierres marquises",
-     "3,60 × 3,32 mm · ≈ 16,31 ct"
+     "144 baguettes (taille à degrés)",
+     "3,15 × 2,42 mm · 0,10 ct chacune"
     ],
     [
      "Total",
-     "144 pierres · ≈ 16,31 ct"
+     "144 pierres · environ 14,4 ct"
     ]
    ]
   },
@@ -235,5 +199,5 @@
    ]
   }
  ],
- "v": "1793552108"
+ "v": "1793621873"
 }
