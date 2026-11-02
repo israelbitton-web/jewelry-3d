@@ -4,7 +4,7 @@
  "metal": "wg",
  "model": "model.glb",
  "min_pixel_ratio": 1.5,
- "elev": 2.2,
+ "elev": 0.45,
  "details": [
   {
    "title": "מידות",
@@ -188,5 +188,5 @@
    ]
   }
  ],
- "v": "1793632057"
+ "v": "1793632242"
 }
