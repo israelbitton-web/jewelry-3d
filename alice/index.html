@@ -11,7 +11,7 @@
 <meta property="og:title" content="Alice">
 <meta property="og:description" content="Cushion 7.36 mm · 18 diamonds · Platinum 950">
 <meta property="og:url" content="https://israelbitton-web.github.io/jewelry-3d/alice/">
-<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/alice/preview.jpg?v=1793636854">
+<meta property="og:image" content="https://israelbitton-web.github.io/jewelry-3d/alice/preview.jpg?v=1793694069">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -306,7 +306,7 @@ const CAPTURE = Q.has('capture');
 const CSIZE = +(Q.get('size') || 1080);
 if (CAPTURE) document.body.classList.add('capture');
 const CFG = await fetch('config.json', { cache: 'no-cache' }).then((r) => r.ok ? r.json() : {}).catch(() => ({}));
-const BUILD = '1793636854';
+const BUILD = '1793694069';
 if (CFG.v && BUILD !== '__BUILD__' && CFG.v !== BUILD && Q.get('r') !== CFG.v) { const u = new URL(location.href); u.searchParams.set('r', CFG.v); location.replace(u); }
 // language: every text on the page in one table; the switch (he / fr / en) rewrites all of it, details included.
 // start = ?lang=, then the visitor's last choice, then config "lang" ("auto" = the phone's language; default Hebrew)
@@ -1058,18 +1058,14 @@ if (CAPTURE) {
   draw();
   window.__ready = true;
 } else {
-  // smooth on every phone: draw only when something changes (no repaint of a still picture); while the finger drags or
-  // the jewel glides, draw at a lighter resolution and come back to full sharpness the moment it stops; a screen that is
-  // not shown (bracelet wrapper) does not draw at all. A slow GPU still lowers the sharp resolution (not below the floor).
-  let HIGH = pixelRatio, dirty = 4, active = true, moving = false, hiT = 0;
-  const LOW = Math.min(HIGH, MOBILE ? 1.0 : 1.25);
-  const B_FULL = MOBILE ? 4 : 5, B_MOVE = 2;      // inner light bounces of the diamonds: fewer only while moving
-  const setB = (n) => { for (const m of diamondMats) if (m.uniforms && m.uniforms.bounces) m.uniforms.bounces.value = n; };
-  const setPR = (p) => { if (renderer.getPixelRatio() !== p) { renderer.setPixelRatio(p); composer.setPixelRatio(p); } setB(p === HIGH ? B_FULL : B_MOVE); };
-  const sharpSoon = () => { clearTimeout(hiT); hiT = setTimeout(() => { if (!moving) { setPR(HIGH); dirty = Math.max(dirty, 2); } }, 160); };
-  controls.addEventListener('start', () => { moving = true; clearTimeout(hiT); setPR(LOW); dirty = Math.max(dirty, 2); });
-  controls.addEventListener('end', () => { moving = false; sharpSoon(); });
-  controls.addEventListener('change', () => { dirty = Math.max(dirty, 1); if (!moving && renderer.getPixelRatio() !== HIGH) sharpSoon(); });
+  // smooth on every phone WITHOUT touching the picture: the render is always the same full quality (same resolution,
+  // same diamond bounces) whether the jewel is still, dragged or gliding - never a lighter "moving" render (L067).
+  // Speed comes only from not drawing what nobody sees: a still picture is not repainted, and a screen that is not
+  // shown (bracelet wrapper) does not draw at all. A slow GPU lowers the resolution once, between gestures.
+  let HIGH = pixelRatio, dirty = 4, active = true, moving = false;
+  controls.addEventListener('start', () => { moving = true; dirty = Math.max(dirty, 2); });
+  controls.addEventListener('end', () => { moving = false; dirty = Math.max(dirty, 2); });
+  controls.addEventListener('change', () => { dirty = Math.max(dirty, 2); });
   window.__markDirty = (n = 30) => { dirty = Math.max(dirty, n); };
   window.__setActive = (on) => { active = on; if (on) dirty = Math.max(dirty, 4); };
   addEventListener('pointerdown', () => { dirty = Math.max(dirty, 40); }, true);
@@ -1082,11 +1078,12 @@ if (CAPTURE) {
     const anim = controls.autoRotate || bloom.enabled;
     if (!(dirty > 0 || anim)) { last = now; return; }
     if (dirty > 0) dirty--;
-    if (anim && !moving && renderer.getPixelRatio() === HIGH) { /* turntable at full sharpness */ }
     draw();
     acc += now - last; last = now; cnt++;
     if (cnt === 30) {
-      if (acc / cnt > 40 && HIGH > PR_MIN && !moving) { HIGH = Math.max(PR_MIN, HIGH - 0.25); setPR(HIGH); }
+      if (acc / cnt > 40 && HIGH > PR_MIN && !moving) {
+        HIGH = Math.max(PR_MIN, HIGH - 0.25); renderer.setPixelRatio(HIGH); composer.setPixelRatio(HIGH); dirty = Math.max(dirty, 2);
+      }
       acc = 0; cnt = 0;
     }
   });
