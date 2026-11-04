@@ -1,0 +1,238 @@
+{
+ "title": "סוליטר עגול",
+ "subtitle": "אבן 8.52 מ״מ · מידה 57 · פלטינה · לפני שיבוץ",
+ "metal": "pt",
+ "model": "model.glb",
+ "details": [
+  {
+   "title": "מידות",
+   "rows": [
+    [
+     "מידה אירופאית",
+     "57"
+    ],
+    [
+     "קוטר פנימי",
+     "18.03 מ״מ"
+    ],
+    [
+     "מידה אמריקאית",
+     "7.9 בערך"
+    ],
+    [
+     "גובה מעל האצבע",
+     "7.5 מ״מ"
+    ],
+    [
+     "רוחב הטבעת בתחתית",
+     "2.4 מ״מ"
+    ],
+    [
+     "מידות כוללות",
+     "26.9 × 22.6 × 7.7 מ״מ"
+    ]
+   ]
+  },
+  {
+   "title": "אבנים",
+   "rows": [
+    [
+     "אבן עגולה",
+     "בקוטר 8.5 מ״מ · 2.30 קראט בערך"
+    ],
+    [
+     "סך הכל",
+     "1 אבנים · 2.30 קראט בערך"
+    ]
+   ]
+  },
+  {
+   "title": "משקל המתכת (יציקה, לפני שיבוץ)",
+   "rows": [
+    [
+     "זהב צהוב 18K",
+     "4.66 גרם"
+    ],
+    [
+     "זהב אדום 18K",
+     "4.57 גרם"
+    ],
+    [
+     "זהב לבן 18K",
+     "4.78 גרם"
+    ],
+    [
+     "זהב 14K",
+     "3.94 גרם"
+    ],
+    [
+     "פלטינה 950",
+     "6.22 גרם"
+    ],
+    [
+     "זהב טהור (פיין) בתוך 18K",
+     "3.49 גרם"
+    ],
+    [
+     "נפח מתכת",
+     "300.5 מ״מ³"
+    ]
+   ]
+  }
+ ],
+ "details_en": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "EU size",
+     "57"
+    ],
+    [
+     "Inner diameter",
+     "18.03 mm"
+    ],
+    [
+     "US size",
+     "≈ 7.9"
+    ],
+    [
+     "Height above the finger",
+     "7.5 mm"
+    ],
+    [
+     "Band width at the bottom",
+     "2.4 mm"
+    ],
+    [
+     "Overall size",
+     "26.9 × 22.6 × 7.7 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Stones",
+   "rows": [
+    [
+     "1 round stone",
+     "Ø 8.5 mm · ≈ 2.30 ct"
+    ],
+    [
+     "Total",
+     "1 stones · ≈ 2.30 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Metal weight (casting, before setting)",
+   "rows": [
+    [
+     "18K yellow gold",
+     "4.66 g"
+    ],
+    [
+     "18K rose gold",
+     "4.57 g"
+    ],
+    [
+     "18K white gold",
+     "4.78 g"
+    ],
+    [
+     "14K gold",
+     "3.94 g"
+    ],
+    [
+     "Platinum 950",
+     "6.22 g"
+    ],
+    [
+     "Fine gold (24K) in 18K",
+     "3.49 g"
+    ],
+    [
+     "Metal volume",
+     "300.5 mm³"
+    ]
+   ]
+  }
+ ],
+ "details_fr": [
+  {
+   "title": "Dimensions",
+   "rows": [
+    [
+     "Taille européenne",
+     "57"
+    ],
+    [
+     "Diamètre intérieur",
+     "18,03 mm"
+    ],
+    [
+     "Taille américaine",
+     "≈ 7,9"
+    ],
+    [
+     "Hauteur au-dessus du doigt",
+     "7,5 mm"
+    ],
+    [
+     "Largeur de l'anneau en bas",
+     "2,4 mm"
+    ],
+    [
+     "Dimensions hors tout",
+     "26,9 × 22,6 × 7,7 mm"
+    ]
+   ]
+  },
+  {
+   "title": "Pierres",
+   "rows": [
+    [
+     "1 pierre ronde",
+     "Ø 8,5 mm · ≈ 2,30 ct"
+    ],
+    [
+     "Total",
+     "1 pierres · ≈ 2,30 ct"
+    ]
+   ]
+  },
+  {
+   "title": "Poids du métal (fonte, avant sertissage)",
+   "rows": [
+    [
+     "Or jaune 18 carats",
+     "4,66 g"
+    ],
+    [
+     "Or rose 18 carats",
+     "4,57 g"
+    ],
+    [
+     "Or blanc 18 carats",
+     "4,78 g"
+    ],
+    [
+     "Or 14 carats",
+     "3,94 g"
+    ],
+    [
+     "Platine 950",
+     "6,22 g"
+    ],
+    [
+     "Or fin (24 carats) dans l'or 18 carats",
+     "3,49 g"
+    ],
+    [
+     "Volume du métal",
+     "300,5 mm³"
+    ]
+   ]
+  }
+ ],
+ "v": "1793799411"
+}
